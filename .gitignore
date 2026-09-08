@@ -1,0 +1,50 @@
+# ===========================
+# Android / Gradle
+# ===========================
+*.iml
+.gradle
+/build
+/captures
+.externalNativeBuild
+.cxx
+
+# ===========================
+# Local Configuration
+# ===========================
+local.properties
+/local.properties
+
+# ===========================
+# IDE — IntelliJ / Android Studio
+# ===========================
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+
+# ===========================
+# macOS
+# ===========================
+.DS_Store
+
+# ===========================
+# 🔐 Signing Keys (NEVER commit these)
+# ===========================
+*.jks
+*.keystore
+*.p12
+*.pfx
+
+# ===========================
+# Release Output (APK / AAB)
+# ===========================
+/app/release/
+*.apk
+*.aab
+
+# ===========================
+# Kotlin / Build caches
+# ===========================
+.kotlin/

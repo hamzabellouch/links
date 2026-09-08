@@ -1,0 +1,25 @@
+# Normalize line endings for cross-platform compatibility
+* text=auto
+
+# Force Unix line endings for shell scripts
+gradlew text eol=lf
+*.sh text eol=lf
+
+# Force Windows line endings for Windows scripts
+gradlew.bat text eol=crlf
+*.bat text eol=crlf
+
+# Binary files — no line-ending conversion
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.jks binary
+*.keystore binary
+*.apk binary
+*.aab binary
+*.jar binary
+*.p12 binary
+*.pfx binary

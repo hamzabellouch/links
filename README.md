@@ -6,7 +6,7 @@
 Inspect link safety, resolve short URLs, scan & generate custom QR codes with automated, privacy-first Android tools.
 </p>
 
-<img width="5504" height="3072" alt="Links" src="" />
+<img width="5504" height="3072" alt="Links" src="https://github.com/user-attachments/assets/5f45f01b-f2f7-415c-8202-13a58ff63364" />
 
 
 
@@ -89,10 +89,13 @@ Links follows clean code architecture principles for maintainability, high perfo
 ## 🔨 Building from Source
 
 To build Links locally, make sure you have the latest version of Android Studio installed.
+
 1. Clone the repository: `git clone https://github.com/hamzabellouch/links.git`
 2. Open the project in Android Studio.
 3. Sync Gradle dependencies.
 4. Build and run the application on your device or emulator.
+
+> **Release builds:** See [KEYSTORE.md](KEYSTORE.md) for instructions on setting up signing locally.
 
 
 

@@ -1,0 +1,141 @@
+package com.tkno.links
+
+import android.content.Context
+import android.content.SharedPreferences
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import com.tkno.links.theme.LinksTheme
+import com.tkno.links.ui.main.MainScreen
+
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+import java.util.Locale
+
+class MainActivity : ComponentActivity() {
+  override fun attachBaseContext(newBase: Context) {
+    val prefs = newBase.getSharedPreferences("links_prefs", Context.MODE_PRIVATE)
+    val appLanguage = prefs.getString("app_language", "system") ?: "system"
+    if (appLanguage != "system") {
+      val locale = Locale.forLanguageTag(appLanguage)
+      val config = android.content.res.Configuration(newBase.resources.configuration)
+      config.setLocale(locale)
+      val localizedContext = newBase.createConfigurationContext(config)
+      super.attachBaseContext(localizedContext)
+    } else {
+      super.attachBaseContext(newBase)
+    }
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    enableEdgeToEdge()
+    setContent {
+      val context = LocalContext.current
+      val prefs = remember { context.getSharedPreferences("links_prefs", Context.MODE_PRIVATE) }
+
+      var darkThemePref by remember { mutableIntStateOf(prefs.getInt("dark_theme", 0)) }
+      var dynamicColorPref by remember { mutableStateOf(prefs.getBoolean("dynamic_color", true)) }
+      var appLanguagePref by remember { mutableStateOf(prefs.getString("app_language", "system") ?: "system") }
+
+      DisposableEffect(prefs) {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
+          if (key == "dark_theme") {
+            darkThemePref = p.getInt("dark_theme", 0)
+          } else if (key == "dynamic_color") {
+            dynamicColorPref = p.getBoolean("dynamic_color", true)
+          } else if (key == "app_language") {
+            appLanguagePref = p.getString("app_language", "system") ?: "system"
+          }
+        }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        onDispose {
+          prefs.unregisterOnSharedPreferenceChangeListener(listener)
+        }
+      }
+
+      val localeContext = remember(appLanguagePref, context) {
+        if (appLanguagePref == "system") {
+          context
+        } else {
+          val locale = Locale.forLanguageTag(appLanguagePref)
+          val config = android.content.res.Configuration(context.resources.configuration)
+          config.setLocale(locale)
+          val localizedConfigContext = context.createConfigurationContext(config)
+          object : android.content.ContextWrapper(context) {
+            override fun getResources(): android.content.res.Resources {
+              return localizedConfigContext.resources
+            }
+            override fun getAssets(): android.content.res.AssetManager {
+              return localizedConfigContext.assets
+            }
+          }
+        }
+      }
+
+      val isDark = when (darkThemePref) {
+        1 -> true
+        2 -> false
+        else -> isSystemInDarkTheme()
+      }
+
+      val currentLocale = remember(appLanguagePref) {
+        if (appLanguagePref == "system") {
+          androidx.core.os.ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.getDefault()
+        } else {
+          Locale.forLanguageTag(appLanguagePref)
+        }
+      }
+
+      val isRtl = remember(currentLocale) {
+        androidx.core.text.TextUtilsCompat.getLayoutDirectionFromLocale(currentLocale) == android.view.View.LAYOUT_DIRECTION_RTL
+      }
+
+      val layoutDirection = if (isRtl) LayoutDirection.Rtl else LayoutDirection.Ltr
+
+      androidx.compose.runtime.LaunchedEffect(isDark) {
+        enableEdgeToEdge(
+          statusBarStyle = if (isDark) {
+            androidx.activity.SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+          } else {
+            androidx.activity.SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+          },
+          navigationBarStyle = if (isDark) {
+            androidx.activity.SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+          } else {
+            androidx.activity.SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+          }
+        )
+      }
+
+      CompositionLocalProvider(
+        LocalContext provides localeContext,
+        LocalLayoutDirection provides layoutDirection
+      ) {
+        LinksTheme(
+          darkTheme = isDark,
+          dynamicColor = dynamicColorPref
+        ) {
+          Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+            MainScreen()
+          }
+        }
+      }
+    }
+  }
+}

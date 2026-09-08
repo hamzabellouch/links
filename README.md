@@ -6,7 +6,7 @@
 Inspect link safety, resolve short URLs, scan & generate custom QR codes with automated, privacy-first Android tools.
 </p>
 
-<img width="5504" height="3072" alt="Links" src="https://github.com/user-attachments/assets/5f45f01b-f2f7-415c-8202-13a58ff63364" />
+<img width="2724" height="1536" alt="Links" src="https://github.com/user-attachments/assets/c741fb2b-e1e1-445c-b417-f5b9c1d63f5e" />
 
 
 

@@ -95,8 +95,6 @@ To build Links locally, make sure you have the latest version of Android Studio 
 3. Sync Gradle dependencies.
 4. Build and run the application on your device or emulator.
 
-> **Release builds:** See [KEYSTORE.md](KEYSTORE.md) for instructions on setting up signing locally.
-
 
 
 > [!WARNING]

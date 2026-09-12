@@ -37,7 +37,7 @@
     <string name="update">Ενημέρωση</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">Χορηγία</string>
-    <string name="sponsor_msg">Το Links θα είναι πάντα δωρεάν και ανοιχτού κώδικα στο μέλλον για όλους. Αν σας αρέσει, σκεφτείτε να με υποστηρίξετε στο GitHub!</string>
+    <string name="sponsor_msg">Το Links θα είναι πάντα δωρεάν και ανοιχτού κώδικα για όλους. Αν σας αρέσει, σκεφτείτε να με υποστηρίξετε στο GitHub!</string>
     <string name="sponsors">Χορηγοί</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">ακολουθήστε τον προγραμματιστή στο Instagram για περισσότερες ενημερώσεις</string>
@@ -110,7 +110,7 @@
     <string name="installer_auto_open">Το πρόγραμμα εγκατάστασης θα πρέπει να ανοίξει αυτόματα.</string>
     <string name="stable">Σταθερή</string>
     <string name="currently_unavailable">Μη διαθέσιμο προς το παρόν</string>
-    <string name="preview">Προεπισκόπηση</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Πρώιμη πρόσβαση</string>
     <string name="pre_release_desc">Εγκαταστήστε δοκιμαστικές εκδόσεις για να προεπισκοπήσετε νέες λειτουργίες και αλλαγές.\n\nΘα υπάρχει κάποια αστάθεια σε αυτές τις εκδόσεις, επομένως μην διστάσετε να μας στείλετε σχόλια εάν αντιμετωπίσετε προβλήματα για να μας βοηθήσετε να βελτιώσουμε την εφαρμογή.</string>
     <string name="update_directory">Κατάλογος ενημέρωσης</string>

@@ -110,7 +110,7 @@
     <string name="installer_auto_open">Инсталатер би требало да се аутоматски отвори.</string>
     <string name="stable">Стабилно</string>
     <string name="currently_unavailable">Тренутно недоступно</string>
-    <string name="preview">Преглед</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Рани приступ</string>
     <string name="pre_release_desc">Инсталирајте прелиминарне верзије да бисте испробали нове функције.\n\nУ овим верзијама може бити нестабилности, па нас слободно контактирајте ако наиђете на проблеме.</string>
     <string name="update_directory">Директоријум ажурирања</string>

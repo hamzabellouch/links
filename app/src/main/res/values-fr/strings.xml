@@ -37,7 +37,7 @@
     <string name="update">Mettre à jour</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">Sponsoriser</string>
-    <string name="sponsor_msg">Links sera toujours gratuit et open source à l\'avenir pour tout le monde. Si vous l\'appréciez, pensez à me sponsoriser sur GitHub !</string>
+    <string name="sponsor_msg">Links sera toujours gratuit et open source pour tout le monde. Si vous l\'appréciez, pensez à me sponsoriser sur GitHub !</string>
     <string name="sponsors">Sponsors</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">suivre le développeur sur Instagram pour plus de mises à jour</string>
@@ -110,7 +110,7 @@
     <string name="installer_auto_open">L\'installeur devrait s\'ouvrir automatiquement.</string>
     <string name="stable">Stable</string>
     <string name="currently_unavailable">Actuellement indisponible</string>
-    <string name="preview">Aperçu</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Accès anticipé</string>
     <string name="pre_release_desc">Installez des versions de pré-déploiement pour prévisualiser les nouvelles fonctionnalités et modifications.\n\nIl y aura une certaine instabilité dans ces versions, n\'hésitez donc pas à nous faire part de vos commentaires si vous rencontrez des problèmes pour nous aider à améliorer l\'application.</string>
     <string name="update_directory">Répertoire de mise à jour</string>

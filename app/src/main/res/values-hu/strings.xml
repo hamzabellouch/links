@@ -37,7 +37,7 @@
     <string name="update">Frissítés</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">Támogatás</string>
-    <string name="sponsor_msg">A Links a jövőben is mindig ingyenes és nyílt forráskódú marad mindenki számára. Ha tetszik, kérjük, fontolja meg a támogatásomat a GitHubon!</string>
+    <string name="sponsor_msg">A Links mindig ingyenes és nyílt forráskódú marad mindenki számára. Ha tetszik, kérjük, fontolja meg a támogatásomat a GitHubon!</string>
     <string name="sponsors">Támogatók</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">kövesse a fejlesztőt az Instagramon a további frissítésekért</string>
@@ -110,7 +110,7 @@
     <string name="installer_auto_open">A telepítőnek automatikusan meg kell nyílnia.</string>
     <string name="stable">Stabil</string>
     <string name="currently_unavailable">Jelenleg nem érhető el</string>
-    <string name="preview">Előnézet</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Korai hozzáférés</string>
     <string name="pre_release_desc">Telepítse a kiadás előtti verziókat az új funkciók és módosítások előzetes megtekintéséhez.\n\nEzekben a verziókban előfordulhat instabilitás, ezért kérjük, bátran küldjön visszajelzést, ha problémát tapasztal, hogy segítsen javítani az alkalmazást a jövőben.</string>
     <string name="update_directory">Könyvtár frissítése</string>

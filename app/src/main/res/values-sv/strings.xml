@@ -110,7 +110,7 @@
     <string name="installer_auto_open">Installationsprogrammet bör öppnas automatiskt.</string>
     <string name="stable">Stabil</string>
     <string name="currently_unavailable">För närvarande inte tillgänglig</string>
-    <string name="preview">Förhandsvisning</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Tidig åtkomst</string>
     <string name="pre_release_desc">Installera förhandsversioner för att testa nya funktioner och ändringar.\n\nDet kan förekomma viss instabilitet i dessa versioner, så tveka inte att ge oss feedback om du upplever problem för att hjälpa oss förbättra appen.</string>
     <string name="update_directory">Uppdateringskatalog</string>

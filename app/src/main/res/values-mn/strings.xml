@@ -36,7 +36,7 @@
     <string name="update">Шинэчлэх</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">Ивээн тэтгэх</string>
-    <string name="sponsor_msg">Links нь цаашид хүн бүрт үргэлж үнэгүй, нээлттэй эх сурвалжтай байх болно. Хэрэв танд таалагдаж байвал GitHub дээр намайг ивээн тэтгэхийг бодолцож үзээрэй!</string>
+    <string name="sponsor_msg">Links нь хүн бүрт үргэлж үнэгүй, нээлттэй эх сурвалжтай байх болно. Хэрэв танд таалагдаж байвал GitHub дээр намайг ивээн тэтгэхийг бодолцож үзээрэй!</string>
     <string name="sponsors">Ивээн тэтгэгчид</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">Шинэ мэдээлэл авахын тулд хөгжүүлэгчийг Instagram дээр дагаарай</string>
@@ -109,7 +109,7 @@
     <string name="installer_auto_open">Суулгагч автоматаар нээгдэх ёстой.</string>
     <string name="stable">Тогтвортой</string>
     <string name="currently_unavailable">Одоогоор боломжгүй</string>
-    <string name="preview">Урьдчилан үзэх</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Эрт хандалт</string>
     <string name="pre_release_desc">Шинэ боломжууд болон өөрчлөлтүүдийг урьдчилан үзэхийн тулд туршилтын хувилбаруудыг суулгана уу.\n\nЭдгээр хувилбарт тодорхой хэмжээний тогтворгүй байдал байж болох тул цаашид аппыг сайжруулахад туслахын тулд гарсан асуудлын талаар санал хүсэлтээ ирүүлнэ үү.</string>
     <string name="update_directory">Шинэчлэлтийн хавтас</string>

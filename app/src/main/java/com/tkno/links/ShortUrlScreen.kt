@@ -110,7 +110,8 @@ fun ShortUrlScreen() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 4.dp, bottom = 12.dp),
+                    .padding(top = 2.dp, bottom = 12.dp)
+                    .height(48.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {

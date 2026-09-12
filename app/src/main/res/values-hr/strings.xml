@@ -110,7 +110,7 @@
     <string name="installer_auto_open">Instalacijski program trebao bi se automatski otvoriti.</string>
     <string name="stable">Stabilno</string>
     <string name="currently_unavailable">Trenutačno nedostupno</string>
-    <string name="preview">Pregled</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Rano isprobavanje</string>
     <string name="pre_release_desc">Instalirajte predizdanja kako biste isprobali nove značajke i promjene.\n\nU ovim verzijama može biti nestabilnosti, pa vas molimo da nam pošaljete povratne informacije ako naiđete na probleme kako biste nam pomogli poboljšati aplikaciju.</string>
     <string name="update_directory">Direktorij ažuriranja</string>

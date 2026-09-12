@@ -37,7 +37,7 @@
     <string name="update">Güncelle</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">Sponsor ol</string>
-    <string name="sponsor_msg">Links gelecekte herkes için her zaman ücretsiz ve açık kaynaklı olacaktır. Beğendiyseniz lütfen GitHub\'da bana sponsor olmayı düşünün!</string>
+    <string name="sponsor_msg">Links herkes için her zaman ücretsiz ve açık kaynaklı olacaktır. Beğendiyseniz lütfen GitHub\'da bana sponsor olmayı düşünün!</string>
     <string name="sponsors">Sponsorlar</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">Geliştiriciyi Instagram\'da takip edin</string>
@@ -110,7 +110,7 @@
     <string name="installer_auto_open">Yükleyici otomatik olarak açılmalıdır.</string>
     <string name="stable">Kararlı</string>
     <string name="currently_unavailable">Şu anda kullanılamıyor</string>
-    <string name="preview">Önizleme</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Erken erişim</string>
     <string name="pre_release_desc">Yeni özellikleri ve değişiklikleri önizlemek için ön sürüm yapılarını yükleyin.\n\nBu sürümlerde bazı kararsızlıklar olacaktır, bu nedenle uygulamayı geliştirmemize yardımcı olmak için bir sorun yaşarsanız lütfen bize geri bildirimde bulunmaktan çekinmeyin.</string>
     <string name="update_directory">Güncelleme dizini</string>

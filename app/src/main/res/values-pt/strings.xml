@@ -36,7 +36,7 @@
     <string name="update">Atualizar</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">Patrocinar</string>
-    <string name="sponsor_msg">Links sempre será gratuito e de código aberto no futuro para todos. Se você gostou, por favor considere me patrocinar no GitHub!</string>
+    <string name="sponsor_msg">Links sempre será gratuito e de código aberto para todos. Se você gostou, por favor considere me patrocinar no GitHub!</string>
     <string name="sponsors">Patrocinadores</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">Siga o desenvolvedor no Instagram para mais atualizações</string>
@@ -109,7 +109,7 @@
     <string name="installer_auto_open">O instalador deve abrir automaticamente.</string>
     <string name="stable">Estável</string>
     <string name="currently_unavailable">Atualmente indisponível</string>
-    <string name="preview">Pré-visualização</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Acesso antecipado</string>
     <string name="pre_release_desc">Instale compilações pré-lançamento para pré-visualizar novos recursos e alterações.\n\nHaverá alguma instabilidade nessas versões, portanto não hesite em nos dar feedback se tiver algum problema para nos ajudar a melhorar o aplicativo.</string>
     <string name="update_directory">Diretório de atualização</string>

@@ -110,7 +110,7 @@
     <string name="installer_auto_open">Installationsprogrammet bør åbne automatisk.</string>
     <string name="stable">Stabil</string>
     <string name="currently_unavailable">I øjeblikket utilgængelig</string>
-    <string name="preview">Forhåndsvisning</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Tidlig adgang</string>
     <string name="pre_release_desc">Installer prøveversioner for at afprøve nye funktioner og ændringer.\n\nDer vil være en vis ustabilitet i disse versioner, så tøv ikke med at give os feedback, hvis du oplever problemer.</string>
     <string name="update_directory">Opdateringsmappe</string>

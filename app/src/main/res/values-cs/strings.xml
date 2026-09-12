@@ -37,7 +37,7 @@
     <string name="update">Aktualizovat</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">Sponzorovat</string>
-    <string name="sponsor_msg">Aplikace Links bude i v budoucnu pro všechny zdarma a s otevřeným zdrojovým kódem. Pokud se vám líbí, zvažte mé sponzorování na GitHubu!</string>
+    <string name="sponsor_msg">Aplikace Links bude pro všechny zdarma a s otevřeným zdrojovým kódem. Pokud se vám líbí, zvažte mé sponzorování na GitHubu!</string>
     <string name="sponsors">Sponzoři</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">sledujte vývojáře na Instagramu pro další novinky</string>
@@ -110,7 +110,7 @@
     <string name="installer_auto_open">Instalátor by se měl otevřít automaticky.</string>
     <string name="stable">Stabilní</string>
     <string name="currently_unavailable">Momentálně nedostupné</string>
-    <string name="preview">Náhled</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Předběžný přístup</string>
     <string name="pre_release_desc">Nainstalujte vývojové verze a vyzkoušejte nové funkce a změny s předstihem.\n\nTyto verze mohou být nestabilní, proto nám neváhejte poslat zpětnou vazbu, pokud narazíte na jakékoli problémy.</string>
     <string name="update_directory">Adresář aktualizací</string>

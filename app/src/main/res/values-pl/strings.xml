@@ -109,7 +109,7 @@
     <string name="installer_auto_open">Instalator powinien otworzyć się automatycznie.</string>
     <string name="stable">Stabilna</string>
     <string name="currently_unavailable">Obecnie niedostępne</string>
-    <string name="preview">Podgląd</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Wczesny dostęp</string>
     <string name="pre_release_desc">Zainstaluj wersje przedpremierowe, aby przetestować nowe funkcje i zmiany.\n\nW tych wersjach mogą wystąpić pewne niestabilności, więc nie wahaj się przekazać nam opinii, jeśli napotkasz jakiekolwiek problemy, aby pomóc nam ulepszyć aplikację w przyszłości.</string>
     <string name="update_directory">Katalog aktualizacji</string>

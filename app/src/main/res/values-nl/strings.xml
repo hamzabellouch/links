@@ -37,7 +37,7 @@
     <string name="update">Bijwerken</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">Sponsor</string>
-    <string name="sponsor_msg">Links zal in de toekomst altijd gratis en open source blijven voor iedereen. Als u het leuk vindt, overweeg dan om mij te sponsoren op GitHub!</string>
+    <string name="sponsor_msg">Links zal altijd gratis en open source blijven voor iedereen. Als u het leuk vindt, overweeg dan om mij te sponsoren op GitHub!</string>
     <string name="sponsors">Sponsoren</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">volg de ontwikkelaar op Instagram voor meer updates</string>
@@ -110,7 +110,7 @@
     <string name="installer_auto_open">Het installatieprogramma zou automatisch moeten openen.</string>
     <string name="stable">Stabiel</string>
     <string name="currently_unavailable">Momenteel niet beschikbaar</string>
-    <string name="preview">Voorbeeld</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Vroege toegang</string>
     <string name="pre_release_desc">Installeer bètaversies om nieuwe functies en wijzigingen uit te proberen.\n\nEr kan enige onstabiliteit zijn in deze versies, dus aarzel niet om ons feedback te geven als u problemen ondervindt.</string>
     <string name="update_directory">Update-map</string>

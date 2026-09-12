@@ -110,7 +110,7 @@
     <string name="installer_auto_open">Установщик должен открыться автоматически.</string>
     <string name="stable">Стабильная</string>
     <string name="currently_unavailable">В настоящее время недоступно</string>
-    <string name="preview">Предварительный просмотр</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Ранний доступ</string>
     <string name="pre_release_desc">Устанавливайте предварительные сборки для тестирования новых функций и изменений.\n\nВ этих версиях возможна нестабильность, поэтому не стесняйтесь оставлять отзывы при возникновении проблем, чтобы помочь нам улучшить приложение.</string>
     <string name="update_directory">Каталог обновлений</string>

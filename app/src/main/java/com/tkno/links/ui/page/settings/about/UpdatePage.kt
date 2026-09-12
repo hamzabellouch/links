@@ -223,7 +223,7 @@ fun UpdatePage(onNavigateBack: () -> Unit, triggerUpdate: Boolean = false) {
                             }
                         }
 
-                        // Preview (early access)
+                        // Beta (early access)
                         Row(
                             modifier = Modifier
                                 .weight(1f)
@@ -244,7 +244,7 @@ fun UpdatePage(onNavigateBack: () -> Unit, triggerUpdate: Boolean = false) {
                             Spacer(modifier = Modifier.width(8.dp))
                             Column {
                                 Text(
-                                    text = stringResource(id = R.string.preview),
+                                    text = stringResource(id = R.string.beta),
                                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )

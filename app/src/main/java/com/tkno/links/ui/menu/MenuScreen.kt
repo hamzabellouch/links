@@ -2,6 +2,7 @@ package com.tkno.links.ui.menu
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.VolunteerActivism
@@ -48,8 +50,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.AnnotatedString
+import com.tkno.links.ui.icon.Dashboard2
+import com.tkno.links.ui.icon.LocalFireDepartment
+import com.tkno.links.ui.icon.Policy
+import com.tkno.links.ui.icon.StarIcon
 import com.tkno.links.ui.svg.drawablevectors.DynamicColorImageVectors
 import com.tkno.links.ui.svg.drawablevectors.coder
 import androidx.compose.ui.text.font.FontWeight
@@ -59,12 +66,13 @@ import androidx.compose.ui.unit.sp
 import com.tkno.links.R
 import com.tkno.links.ui.component.*
 import com.tkno.links.ui.page.AppUpdater
+import com.tkno.links.ui.page.WhatsNewDialog
 import com.tkno.links.ui.page.settings.BasePreferencePage
 import com.tkno.links.ui.page.settings.about.UpdatePage
 import java.util.Locale
 
 enum class MenuSubScreen {
-    Main, Settings, GeneralSettings, LookAndFeel, Languages, DarkTheme, Sponsor, Troubleshooting, About, Credits, Update
+    Main, Settings, GeneralSettings, LookAndFeel, InterfaceAndInteraction, Languages, DarkTheme, Sponsor, Troubleshooting, About, Credits, Update
 }
 
 @Composable
@@ -74,9 +82,10 @@ fun MenuScreen() {
     BackHandler(enabled = currentSubScreen != MenuSubScreen.Main) {
         when (currentSubScreen) {
             MenuSubScreen.GeneralSettings -> currentSubScreen = MenuSubScreen.Settings
+            MenuSubScreen.LookAndFeel -> currentSubScreen = MenuSubScreen.Settings
+            MenuSubScreen.InterfaceAndInteraction -> currentSubScreen = MenuSubScreen.Settings
             MenuSubScreen.Languages -> currentSubScreen = MenuSubScreen.LookAndFeel
             MenuSubScreen.DarkTheme -> currentSubScreen = MenuSubScreen.LookAndFeel
-            MenuSubScreen.LookAndFeel -> currentSubScreen = MenuSubScreen.Settings
             MenuSubScreen.Credits -> currentSubScreen = MenuSubScreen.About
             MenuSubScreen.Update -> currentSubScreen = MenuSubScreen.About
             else -> currentSubScreen = MenuSubScreen.Main
@@ -91,10 +100,14 @@ fun MenuScreen() {
                 when (route) {
                     "general" -> currentSubScreen = MenuSubScreen.GeneralSettings
                     "appearance" -> currentSubScreen = MenuSubScreen.LookAndFeel
+                    "interface_interaction" -> currentSubScreen = MenuSubScreen.InterfaceAndInteraction
                 }
             }
         )
         MenuSubScreen.GeneralSettings -> GeneralSettingsPage(
+            onNavigateBack = { currentSubScreen = MenuSubScreen.Settings }
+        )
+        MenuSubScreen.InterfaceAndInteraction -> InterfaceAndInteractionPage(
             onNavigateBack = { currentSubScreen = MenuSubScreen.Settings }
         )
         MenuSubScreen.LookAndFeel -> AppearancePreferences(
@@ -145,7 +158,8 @@ fun MainMenuList(onNavigateTo: (MenuSubScreen) -> Unit) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 20.dp, end = 20.dp, top = 4.dp, bottom = 12.dp),
+                    .padding(start = 20.dp, end = 20.dp, top = 2.dp, bottom = 12.dp)
+                    .height(48.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -221,6 +235,15 @@ fun SettingsPage(onNavigateBack: () -> Unit, onNavigateTo: (String) -> Unit) {
                     onNavigateTo("appearance")
                 }
             }
+            item {
+                SettingItem(
+                    title = stringResource(id = R.string.interface_interaction),
+                    description = stringResource(id = R.string.interface_interaction_desc),
+                    icon = Dashboard2,
+                ) {
+                    onNavigateTo("interface_interaction")
+                }
+            }
         }
     }
 }
@@ -239,6 +262,70 @@ fun GeneralSettingsPage(onNavigateBack: () -> Unit) {
                 .fillMaxSize()
                 .padding(padding)
         )
+    }
+}
+
+/* ---------------- InterfaceAndInteractionPage ---------------- */
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun InterfaceAndInteractionPage(onNavigateBack: () -> Unit) {
+    val context = LocalContext.current
+    val prefs = remember { context.getSharedPreferences("links_prefs", android.content.Context.MODE_PRIVATE) }
+
+    var hideLabels by remember { mutableStateOf(prefs.getBoolean("hide_navigation_labels", false)) }
+    var useClassicTaskbar by remember { mutableStateOf(prefs.getBoolean("use_classic_taskbar", false)) }
+
+    DisposableEffect(prefs) {
+        val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
+            if (key == "hide_navigation_labels") {
+                hideLabels = p.getBoolean("hide_navigation_labels", false)
+            } else if (key == "use_classic_taskbar") {
+                useClassicTaskbar = p.getBoolean("use_classic_taskbar", false)
+            }
+        }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        onDispose {
+            prefs.unregisterOnSharedPreferenceChangeListener(listener)
+        }
+    }
+
+    BasePreferencePage(
+        title = stringResource(id = R.string.interface_interaction),
+        onBack = onNavigateBack,
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+        ) {
+            PreferenceSubtitle(text = stringResource(R.string.navigation))
+
+            PreferenceSwitch(
+                title = stringResource(R.string.hide_navigation_labels),
+                description = stringResource(R.string.hide_navigation_labels_desc),
+                icon = Icons.Outlined.VisibilityOff,
+                isChecked = hideLabels,
+                onClick = {
+                    val newValue = !hideLabels
+                    hideLabels = newValue
+                    prefs.edit().putBoolean("hide_navigation_labels", newValue).apply()
+                }
+            )
+
+            PreferenceSwitch(
+                title = stringResource(R.string.use_classic_taskbar),
+                description = stringResource(R.string.use_classic_taskbar_desc),
+                icon = Icons.Outlined.Dashboard,
+                isChecked = useClassicTaskbar,
+                onClick = {
+                    val newValue = !useClassicTaskbar
+                    useClassicTaskbar = newValue
+                    prefs.edit().putBoolean("use_classic_taskbar", newValue).apply()
+                }
+            )
+        }
     }
 }
 
@@ -581,6 +668,7 @@ fun SponsorsPage(onNavigateBack: () -> Unit) {
         canScroll = { true },
     )
     val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
 
     Scaffold(
         modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -653,7 +741,11 @@ fun SponsorsPage(onNavigateBack: () -> Unit) {
 
                             Button(
                                 onClick = {
-                                    uriHandler.openUri("https://github.com/sponsors/hamzabellouch")
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.sponsor_unavailable),
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
                                 },
                                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                                 modifier = Modifier.align(Alignment.End),
@@ -667,6 +759,30 @@ fun SponsorsPage(onNavigateBack: () -> Unit) {
                                 )
 
                                 Text(text = stringResource(id = R.string.sponsor))
+                            }
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Button(
+                                onClick = {
+                                    uriHandler.openUri("https://github.com/hamzabellouch/links")
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFFFC107),
+                                    contentColor = Color(0xFF212121),
+                                ),
+                                contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                                modifier = Modifier.align(Alignment.End),
+                            ) {
+                                Icon(
+                                    modifier = Modifier
+                                        .padding(end = 8.dp)
+                                        .size(ButtonDefaults.IconSize),
+                                    imageVector = StarIcon,
+                                    contentDescription = null,
+                                )
+
+                                Text(text = stringResource(id = R.string.star))
                             }
                         }
                     }
@@ -708,6 +824,9 @@ fun TroubleShootingPage(onNavigateBack: () -> Unit) {
     val emailContainer = if (isDark) Color(0xFF1E293B) else Color(0xFFF1F5F9)
     val emailContent = if (isDark) Color(0xFF94A3B8) else Color(0xFF475569)
 
+    val whatsappContainer = if (isDark) Color(0xFF0A2B1D) else Color(0xFFE8F8F0)
+    val whatsappContent = if (isDark) Color(0xFF25D366) else Color(0xFF128C7E)
+
     val facebookContainer = if (isDark) Color(0xFF0D2646) else Color(0xFFE7F3FF)
     val facebookContent = if (isDark) Color(0xFF4599FF) else Color(0xFF1877F2)
 
@@ -741,7 +860,7 @@ fun TroubleShootingPage(onNavigateBack: () -> Unit) {
     ) { padding ->
         LazyColumn(contentPadding = padding) {
             item {
-                val pagerState = rememberPagerState(initialPage = 0) { 10 }
+                val pagerState = rememberPagerState(initialPage = 0) { 11 }
                 Column(modifier = Modifier.fillMaxWidth()) {
                     HorizontalPager(
                         state = pagerState,
@@ -758,15 +877,24 @@ fun TroubleShootingPage(onNavigateBack: () -> Unit) {
                             ) { showContactDialog = true }
 
                             1 -> PreferencesHintCard(
+                                title = stringResource(id = R.string.whatsapp),
+                                icon = painterResource(id = R.drawable.ic_whatsapp),
+                                description = stringResource(id = R.string.whatsapp_desc),
+                                containerColor = whatsappContainer,
+                                contentColor = whatsappContent,
+                                textColor = Color.White,
+                            ) { uriHandler.openUri("https://whatsapp.com/channel/0029Vb7MArw0LKZMpjjqOk2P") }
+
+                            2 -> PreferencesHintCard(
                                 title = stringResource(id = R.string.facebook),
                                 icon = painterResource(id = R.drawable.ic_facebook),
                                 description = stringResource(id = R.string.facebook_desc),
                                 containerColor = facebookContainer,
                                 contentColor = facebookContent,
                                 textColor = Color.White,
-                            ) { uriHandler.openUri("https://www.facebook.com/hamzabellouch1") }
+                            ) { uriHandler.openUri("https://www.facebook.com/hamzabellouch0") }
 
-                            2 -> PreferencesHintCard(
+                            3 -> PreferencesHintCard(
                                 title = stringResource(id = R.string.instagram),
                                 icon = painterResource(id = R.drawable.ic_instagram),
                                 description = stringResource(id = R.string.instagram_desc),
@@ -775,7 +903,7 @@ fun TroubleShootingPage(onNavigateBack: () -> Unit) {
                                 textColor = Color.White,
                             ) { uriHandler.openUri("https://www.instagram.com/hamzabellouch0") }
 
-                            3 -> PreferencesHintCard(
+                            4 -> PreferencesHintCard(
                                 title = stringResource(id = R.string.linkedin),
                                 icon = painterResource(id = R.drawable.ic_linkedin),
                                 description = stringResource(id = R.string.linkedin_desc),
@@ -784,7 +912,7 @@ fun TroubleShootingPage(onNavigateBack: () -> Unit) {
                                 textColor = Color.White,
                             ) { uriHandler.openUri("https://www.linkedin.com/in/hamzabellouch") }
 
-                            4 -> PreferencesHintCard(
+                            5 -> PreferencesHintCard(
                                 title = stringResource(id = R.string.x_platform),
                                 icon = painterResource(id = R.drawable.ic_x),
                                 description = stringResource(id = R.string.x_desc),
@@ -793,7 +921,7 @@ fun TroubleShootingPage(onNavigateBack: () -> Unit) {
                                 textColor = Color.White,
                             ) { uriHandler.openUri("https://x.com/hamzabellouch0") }
 
-                            5 -> PreferencesHintCard(
+                            6 -> PreferencesHintCard(
                                 title = stringResource(id = R.string.youtube),
                                 icon = painterResource(id = R.drawable.ic_youtube),
                                 description = stringResource(id = R.string.youtube_desc),
@@ -802,7 +930,7 @@ fun TroubleShootingPage(onNavigateBack: () -> Unit) {
                                 textColor = Color.White,
                             ) { uriHandler.openUri("https://www.youtube.com/@hamzabellouch") }
 
-                            6 -> PreferencesHintCard(
+                            7 -> PreferencesHintCard(
                                 title = stringResource(id = R.string.tiktok),
                                 icon = painterResource(id = R.drawable.ic_tiktok),
                                 description = stringResource(id = R.string.tiktok_desc),
@@ -811,7 +939,7 @@ fun TroubleShootingPage(onNavigateBack: () -> Unit) {
                                 textColor = Color.White,
                             ) { uriHandler.openUri("https://www.tiktok.com/@hamzabellouch0") }
 
-                            7 -> PreferencesHintCard(
+                            8 -> PreferencesHintCard(
                                 title = stringResource(id = R.string.reddit),
                                 icon = painterResource(id = R.drawable.ic_reddit),
                                 description = stringResource(id = R.string.reddit_desc),
@@ -820,7 +948,7 @@ fun TroubleShootingPage(onNavigateBack: () -> Unit) {
                                 textColor = Color.White,
                             ) { uriHandler.openUri("https://www.reddit.com") }
 
-                            8 -> PreferencesHintCard(
+                            9 -> PreferencesHintCard(
                                 title = stringResource(id = R.string.bluesky),
                                 icon = painterResource(id = R.drawable.ic_bluesky),
                                 description = stringResource(id = R.string.bluesky_desc),
@@ -829,7 +957,7 @@ fun TroubleShootingPage(onNavigateBack: () -> Unit) {
                                 textColor = Color.White,
                             ) { uriHandler.openUri("https://bsky.app/profile/hamzabellouch.bsky.social") }
 
-                            9 -> PreferencesHintCard(
+                            10 -> PreferencesHintCard(
                                 title = stringResource(id = R.string.telegram_channel),
                                 icon = painterResource(id = R.drawable.icons8_telegram_app),
                                 description = stringResource(id = R.string.telegram_channel_desc),
@@ -846,7 +974,7 @@ fun TroubleShootingPage(onNavigateBack: () -> Unit) {
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        repeat(10) { pageIndex ->
+                        repeat(11) { pageIndex ->
                             val isSelected = pagerState.currentPage == pageIndex
                             Box(
                                 modifier = Modifier
@@ -927,6 +1055,7 @@ private const val repoUrl = "https://github.com/hamzabellouch/links/blob/main/RE
 private const val githubIssueUrl = "https://github.com/hamzabellouch/links/issues"
 private const val matrixSpaceUrl = "https://sites.google.com/view/hamzabellouch"
 private const val githubSponsor = "https://github.com/sponsors/hamzabellouch"
+private const val privacyPolicyUrl = "https://github.com/hamzabellouch/links/blob/main/PRIVACY_POLICY.md"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -949,13 +1078,22 @@ fun AboutPage(
         mutableStateOf(prefs.getBoolean("auto_update_enabled", true))
     }
 
+    var showWhatsNewDialog by remember { mutableStateOf(false) }
+
+    val whatsNewDismissedUntil = remember {
+        prefs.getLong("whats_new_dismissed_until", 0L)
+    }
+    var isWhatsNewDismissed by remember {
+        mutableStateOf(System.currentTimeMillis() < whatsNewDismissedUntil)
+    }
+
     // Launch background update check
     AppUpdater(isAutoUpdateEnabled = isAutoUpdateEnabled)
 
     val versionName = try {
-        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "0.0.1-beta"
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "0.0.2-beta"
     } catch (e: Exception) {
-        "0.0.1-beta"
+        "0.0.2-beta"
     }
     val info = "App version: $versionName\nPackage name: ${context.packageName}\nDevice: Android ${android.os.Build.VERSION.RELEASE} (API ${android.os.Build.VERSION.SDK_INT})"
     val uriHandler = LocalUriHandler.current
@@ -979,6 +1117,70 @@ fun AboutPage(
                     navigationIcon = { BackButton { onNavigateBack() } },
                     scrollBehavior = scrollBehavior,
                     windowInsets = WindowInsets(0.dp),
+                    actions = {
+                        if (!isWhatsNewDismissed) {
+                            Surface(
+                                shape = CircleShape,
+                                color = MaterialTheme.colorScheme.secondaryContainer,
+                                modifier = Modifier
+                                    .padding(end = 12.dp)
+                                    .clip(CircleShape)
+                            ) {
+                                Row(
+                                    modifier = Modifier.height(36.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    // الجزء الأيسر: الأيقونة + النص (عند الضغط يفتح النافذة)
+                                    Row(
+                                        modifier = Modifier
+                                            .clickable(
+                                                role = Role.Button,
+                                                onClick = { showWhatsNewDialog = true }
+                                            )
+                                            .padding(start = 10.dp, end = 6.dp, top = 6.dp, bottom = 6.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = LocalFireDepartment,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(18.dp),
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                        Text(
+                                            text = stringResource(R.string.whats_new),
+                                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
+                                            color = MaterialTheme.colorScheme.onSecondaryContainer
+                                        )
+                                    }
+
+                                    // الجزء الأيمن: زر 'X' لإخفاء الكبسولة لمدة 24 ساعة
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(end = 6.dp)
+                                            .size(24.dp)
+                                            .clip(CircleShape)
+                                            .clickable(
+                                                role = Role.Button,
+                                                onClick = {
+                                                    val dismissUntil = System.currentTimeMillis() + 24 * 60 * 60 * 1000L
+                                                    prefs.edit().putLong("whats_new_dismissed_until", dismissUntil).apply()
+                                                    isWhatsNewDismissed = true
+                                                }
+                                            ),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Close,
+                                            contentDescription = stringResource(R.string.close),
+                                            modifier = Modifier.size(14.dp),
+                                            tint = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
                 )
             }
         },
@@ -1056,6 +1258,15 @@ fun AboutPage(
                 }
                 item {
                     PreferenceItem(
+                        title = stringResource(R.string.privacy_policy),
+                        description = stringResource(R.string.privacy_policy_desc),
+                        icon = Policy,
+                    ) {
+                        openUrl(privacyPolicyUrl)
+                    }
+                }
+                item {
+                    PreferenceItem(
                         title = stringResource(R.string.version),
                         description = versionName,
                         icon = Icons.Outlined.Info,
@@ -1077,6 +1288,10 @@ fun AboutPage(
             }
         },
     )
+
+    if (showWhatsNewDialog) {
+        WhatsNewDialog(onDismissRequest = { showWhatsNewDialog = false })
+    }
 }
 
 /* ---------------- CreditsPage ---------------- */

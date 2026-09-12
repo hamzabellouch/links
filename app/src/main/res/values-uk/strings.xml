@@ -110,7 +110,7 @@
     <string name="installer_auto_open">Встановлювач повинен відкритися автоматично.</string>
     <string name="stable">Стабільна</string>
     <string name="currently_unavailable">Наразі недоступно</string>
-    <string name="preview">Попередній перегляд</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Ранній доступ</string>
     <string name="pre_release_desc">Встановлюйте попередні збірки для ознайомлення з новими функціями та змінами.\n\nУ цих версіях можлива нестабільність роботи, тому, будь ласка, повідомляйте нам про виявлені проблеми, щоб допомогти покращити додаток.</string>
     <string name="update_directory">Директорія оновлення</string>

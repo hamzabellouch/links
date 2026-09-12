@@ -37,12 +37,16 @@
     <string name="update">Update</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">Sponsor</string>
-    <string name="sponsor_msg">Links will be always free and open source in the future for everyone. If you like it, please consider sponsoring me on GitHub!</string>
+    <string name="sponsor_unavailable">Sponsor is currently unavailable</string>
+    <string name="star">Star</string>
+    <string name="sponsor_msg">Links will be always free and open source for everyone. If you like it, please consider sponsoring me on GitHub!</string>
     <string name="sponsors">Sponsors</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">follow the developer on Instagram for more updates</string>
     <string name="facebook">Facebook</string>
     <string name="facebook_desc">follow the developer on Facebook for more updates</string>
+    <string name="whatsapp">WhatsApp</string>
+    <string name="whatsapp_desc">follow the developer on WhatsApp for more updates</string>
     <string name="linkedin">LinkedIn</string>
     <string name="linkedin_desc">follow the developer on LinkedIn for more updates</string>
     <string name="x_platform">X</string>
@@ -84,6 +88,7 @@
     <string name="scan_now">Scan now</string>
     <string name="scanned_content">Scanned content</string>
     <string name="feature_currently_unavailable">This is currently unavailable.</string>
+    <string name="option_currently_unavailable">This option is currently unavailable</string>
     <string name="contact">Contact</string>
     <string name="contact_desc">Contact the developer to add new features in Links</string>
     <string name="links_issue_tracker">Links Issue Tracker</string>
@@ -110,8 +115,17 @@
     <string name="installer_auto_open">The installer should open automatically.</string>
     <string name="stable">Stable</string>
     <string name="currently_unavailable">Currently unavailable</string>
-    <string name="preview">Preview</string>
-    <string name="early_access">Early access</string>
+    <string name="beta">Beta</string>
+    <string name="early_access">Get new features</string>
     <string name="pre_release_desc">Install pre-release builds to preview new features and changes.\n\nThere will be some instability in these versions, so please don\'t hesitate to give us feedback if you experience any problems to help us improve the app for the future.</string>
     <string name="update_directory">Update directory</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="interface_interaction">Interface &amp; interaction</string>
+    <string name="interface_interaction_desc">Navigation, gestures, UI behavior</string>
+    <string name="navigation">Navigation</string>
+    <string name="navigation_desc">Navigation bar style and appearance</string>
+    <string name="hide_navigation_labels">Hide navigation labels</string>
+    <string name="hide_navigation_labels_desc">Only show icons in the navigation bar</string>
+    <string name="use_classic_taskbar">Use classic taskbar</string>
+    <string name="use_classic_taskbar_desc">Switch back to the classic full-width navigation bar</string>
 </resources>

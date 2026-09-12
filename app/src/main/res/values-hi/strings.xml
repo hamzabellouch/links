@@ -37,7 +37,7 @@
     <string name="update">अपडेट करें</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">स्पॉन्सर करें</string>
-    <string name="sponsor_msg">Links भविष्य में सभी के लिए हमेशा मुफ़्त और ओपन सोर्स रहेगा। यदि आप इसे पसंद करते हैं, तो कृपया GitHub पर मुझे स्पॉन्सर करने पर विचार करें!</string>
+    <string name="sponsor_msg">Links सभी के लिए हमेशा मुफ़्त और ओपन सोर्स रहेगा। यदि आप इसे पसंद करते हैं, तो कृपया GitHub पर मुझे स्पॉन्सर करने पर विचार करें!</string>
     <string name="sponsors">स्पॉन्सर</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">अधिक अपडेट के लिए डेवलपर को Instagram पर फ़ॉलो करें</string>
@@ -110,7 +110,7 @@
     <string name="installer_auto_open">इंस्टॉलर अपने आप खुलना चाहिए।</string>
     <string name="stable">स्टेबल</string>
     <string name="currently_unavailable">वर्तमान में अनुपलब्ध</string>
-    <string name="preview">पूर्वावलोकन</string>
+    <string name="beta">Beta</string>
     <string name="early_access">अग्रिम पहुँच</string>
     <string name="pre_release_desc">नई सुविधाओं और परिवर्तनों का पूर्वावलोकन करने के लिए प्री-रिलीज़ बिल्ड इंस्टॉल करें।\n\nइन संस्करणों में कुछ अस्थिरता होगी, इसलिए यदि आपको ऐप को बेहतर बनाने में हमारी मदद करने के लिए कोई समस्या आती है तो कृपया हमें फ़ीडबैक देने में संकोच न करें।</string>
     <string name="update_directory">अपडेट डायरेक्टरी</string>

@@ -37,7 +37,7 @@
     <string name="update">I-update</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">Sponsor</string>
-    <string name="sponsor_msg">Ang Links ay palaging libre at open source sa hinaharap para sa lahat. Kung gusto mo ito, mangyaring isaalang-alang ang pag-sponsor sa akin sa GitHub!</string>
+    <string name="sponsor_msg">Ang Links ay palaging libre at open source para sa lahat. Kung gusto mo ito, mangyaring isaalang-alang ang pag-sponsor sa akin sa GitHub!</string>
     <string name="sponsors">Mga Sponsor</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">sundan ang developer sa Instagram para sa higit pang mga update</string>
@@ -110,7 +110,7 @@
     <string name="installer_auto_open">Dapat na awtomatikong magbukas ang installer.</string>
     <string name="stable">Stable</string>
     <string name="currently_unavailable">Kasalukuyang hindi available</string>
-    <string name="preview">Preview</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Maagang pag-access</string>
     <string name="pre_release_desc">I-install ang mga pre-release na build upang ma-preview ang mga bagong tampok at pagbabago.\n\nMay ilang kawalan ng katatagan sa mga bersyong ito, kaya mangyaring huwag mag-atubiling magbigay sa amin ng feedback kung makaranas ka ng anumang problema upang matulungan kaming mapabuti ang app para sa hinaharap.</string>
     <string name="update_directory">Direktoryo ng update</string>

@@ -37,7 +37,7 @@
     <string name="update">更新</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">贊助</string>
-    <string name="sponsor_msg">Links 在未來將始終對所有人免費且開源。如果您喜歡它，請考慮在 GitHub 上贊助我！</string>
+    <string name="sponsor_msg">Links 將始終對所有人免費且開源。如果您喜歡它，請考慮在 GitHub 上贊助我！</string>
     <string name="sponsors">贊助者</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">在 Instagram 上追蹤開發者以取得更多動態</string>
@@ -110,7 +110,7 @@
     <string name="installer_auto_open">安裝程式應該會自動開啟。</string>
     <string name="stable">穩定版</string>
     <string name="currently_unavailable">暫不可用</string>
-    <string name="preview">預覽版</string>
+    <string name="beta">Beta</string>
     <string name="early_access">搶先體驗</string>
     <string name="pre_release_desc">安裝預先發行版本以預覽新功能與變更。\n\n這些版本可能不夠穩定，如果您遇到任何問題，請隨時向我們回饋，以協助我們持續改進應用程式。</string>
     <string name="update_directory">更新目錄</string>

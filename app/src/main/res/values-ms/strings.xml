@@ -36,7 +36,7 @@
     <string name="update">Kemas kini</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">Tajaan</string>
-    <string name="sponsor_msg">Links akan sentiasa percuma dan sumber terbuka pada masa hadapan untuk semua orang. Jika anda meyukainya, sila pertimbangkan untuk menaja saya di GitHub!</string>
+    <string name="sponsor_msg">Links akan sentiasa percuma dan sumber terbuka untuk semua orang. Jika anda meyukainya, sila pertimbangkan untuk menaja saya di GitHub!</string>
     <string name="sponsors">Penaja</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">ikuti pembangun di Instagram untuk kemas kini lanjut</string>
@@ -109,7 +109,7 @@
     <string name="installer_auto_open">Pemasang sepatutnya dibuka secara automatik.</string>
     <string name="stable">Stabil</string>
     <string name="currently_unavailable">Buat masa ini tidak tersedia</string>
-    <string name="preview">Pratonton</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Akses awal</string>
     <string name="pre_release_desc">Pasang binaan pra-keluaran untuk meninjau ciri dan perubahan baharu.\n\nTerdapat ketidakstabilan dalam versi ini, jadi jangan teragak-agak untuk memberi maklum balas jika anda menghadapi sebarang masalah untuk membantu kami menambah baik aplikasi ini pada masa hadapan.</string>
     <string name="update_directory">Direktori kemas kini</string>

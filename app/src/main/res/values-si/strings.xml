@@ -110,7 +110,7 @@
     <string name="installer_auto_open">ස්ථාපකය ස්වයංක්‍රීයව විවෘත විය යුතුය.</string>
     <string name="stable">ස්ථාවර</string>
     <string name="currently_unavailable">දැනට ලබා ගත නොහැක</string>
-    <string name="preview">පූර්ව දර්ශනය</string>
+    <string name="beta">Beta</string>
     <string name="early_access">පූර්ව ප්‍රවේශය</string>
     <string name="pre_release_desc">නව විශේෂාංග සහ වෙනස්කම් අත්හදා බැලීමට පූර්ව නිකුත් කිරීම් ස්ථාපනය කරන්න.\n\nමෙම සංස්කරණවල ඇතැම් නොසන්සුන්තා තිබිය හැක, එබැවින් අපට යෙදුම වැඩිදියුණු කිරීමට උදවු කිරීමට ගැටලු ඇත්නම් ප්‍රතිපෝෂණ ලබා දෙන්න.</string>
     <string name="update_directory">යාවත්කාලීන නාමාවලිය</string>

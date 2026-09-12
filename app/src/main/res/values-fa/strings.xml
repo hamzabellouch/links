@@ -36,7 +36,7 @@
     <string name="update">به‌روزرسانی</string>
     <string name="telegram_channel">تلگرام</string>
     <string name="sponsor">حامی مالی</string>
-    <string name="sponsor_msg">Links در آینده همواره برای همه رایگان و متن‌باز خواهد بود. اگر آن را دوست دارید، لطفاً حمایت مالی از من در گیت‌هاب را مد نظر قرار دهید!</string>
+    <string name="sponsor_msg">Links همواره برای همه رایگان و متن‌باز خواهد بود. اگر آن را دوست دارید، لطفاً حمایت مالی از من در گیت‌هاب را مد نظر قرار دهید!</string>
     <string name="sponsors">حامیان مالی</string>
     <string name="instagram">اینستاگرام</string>
     <string name="instagram_desc">برای به‌روزرسانی‌های بیشتر، توسعه‌دهنده را در اینستاگرام دنبال کنید</string>
@@ -109,7 +109,7 @@
     <string name="installer_auto_open">نصب‌کننده باید به طور خودکار باز شود.</string>
     <string name="stable">پایدار</string>
     <string name="currently_unavailable">در حال حاضر در دسترس نیست</string>
-    <string name="preview">پیش‌نمایش</string>
+    <string name="beta">Beta</string>
     <string name="early_access">دسترسی زودهنگام</string>
     <string name="pre_release_desc">برای پیش‌نمایش ویژگی‌ها و تغییرات جدید، نسخه‌های پیش‌انتشار را نصب کنید.\n\nدر این نسخه‌ها برخی بی‌ثباتی‌ها وجود خواهد داشت، بنابراین در صورت بروز هرگونه مشکل بازخورد دهید تا به ما در بهبود برنامه کمک کنید.</string>
     <string name="update_directory">پوشه به‌روزرسانی</string>

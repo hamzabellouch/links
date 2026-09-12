@@ -110,7 +110,7 @@
     <string name="installer_auto_open">Trình cài đặt sẽ tự động mở.</string>
     <string name="stable">Ổn định</string>
     <string name="currently_unavailable">Hiện chưa khả dụng</string>
-    <string name="preview">Xem trước</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Truy cập sớm</string>
     <string name="pre_release_desc">Cài đặt các bản dựng thử nghiệm để trải nghiệm trước các tính năng và thay đổi mới.\n\nSẽ có một số không ổn định trong các phiên bản này, vì vậy xin đừng ngần ngại gửi phản hồi nếu bạn gặp sự cố để giúp chúng tôi cải thiện ứng dụng.</string>
     <string name="update_directory">Thư mục cập nhật</string>

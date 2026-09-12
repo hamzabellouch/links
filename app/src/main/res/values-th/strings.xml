@@ -110,7 +110,7 @@
     <string name="installer_auto_open">ตัวติดตั้งควรจะเปิดขึ้นโดยอัตโนมัติ</string>
     <string name="stable">เสถียร</string>
     <string name="currently_unavailable">ขณะนี้ยังไม่พร้อมใช้งาน</string>
-    <string name="preview">ตัวอย่าง</string>
+    <string name="beta">Beta</string>
     <string name="early_access">การเข้าถึงก่อนใคร</string>
     <string name="pre_release_desc">ติดตั้งเวอร์ชันทดสอบล่วงหน้าเพื่อลองใช้ฟีเจอร์และการเปลี่ยนแปลงใหม่ๆ\n\nเวอร์ชันเหล่านี้อาจมีความไม่เสถียร ดังนั้นโปรดอย่าลังเลที่จะส่งข้อเสนอแนะหากพบปัญหาเพื่อช่วยเราปรับปรุงแอป</string>
     <string name="update_directory">ไดเรกทอรีอัปเดต</string>

@@ -331,7 +331,8 @@ fun QrCodeScreen() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 4.dp, bottom = 12.dp),
+                        .padding(top = 2.dp, bottom = 12.dp)
+                        .height(48.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -385,8 +386,31 @@ fun QrCodeScreen() {
                             GenerateContent(softBlue = softBlue, borderGrey = borderGrey, textMuted = textMuted)
                         }
                         QrMode.Costume -> {
-                            // Left empty as requested for future implementation
-                            Box(modifier = Modifier.fillMaxSize())
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center,
+                                    modifier = Modifier.padding(horizontal = 24.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Info,
+                                        contentDescription = null,
+                                        tint = textMuted,
+                                        modifier = Modifier.size(64.dp)
+                                    )
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    Text(
+                                        text = stringResource(R.string.option_currently_unavailable),
+                                        color = textMuted,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
                         }
                     }
                 }

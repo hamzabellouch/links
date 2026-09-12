@@ -37,7 +37,7 @@
     <string name="update">Yenilə</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">Sponsor ol</string>
-    <string name="sponsor_msg">Links gələcəkdə hər kəs üçün həmişə pulsuz və açıq mənbəli olacaq. Bəyəndinizsə, GitHub-da mənə sponsor olmağı düşünün!</string>
+    <string name="sponsor_msg">Links hər kəs üçün həmişə pulsuz və açıq mənbəli olacaq. Bəyəndinizsə, GitHub-da mənə sponsor olmağı düşünün!</string>
     <string name="sponsors">Sponsorlar</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">Daha çox yeniləmə üçün tərtibatçını Instagram-da izləyin</string>
@@ -110,7 +110,7 @@
     <string name="installer_auto_open">Quraşdırıcı avtomatik açılmalıdır.</string>
     <string name="stable">Stabil</string>
     <string name="currently_unavailable">Hal-hazırda əlçatan deyil</string>
-    <string name="preview">Önbaxış</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Erkən giriş</string>
     <string name="pre_release_desc">Yeni funksiyalara və dəyişikliklərə öncədən baxmaq üçün buraxılışdan əvvəlki versiyaları quraşdırın.\n\nBu versiyalarda bəzi qeyri-sabitliklər ola bilər, gələcəkdə tətbiqi təkmilləşdirməyə kömək etmək üçün hər hansı bir problemlə qarşılaşsanız, bizə rəy bildirməkdən çəkinməyin.</string>
     <string name="update_directory">Yeniləmə qovluğu</string>

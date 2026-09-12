@@ -37,7 +37,7 @@
     <string name="update">Абнавіць</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">Падрымаць</string>
-    <string name="sponsor_msg">Links заўсёды будзе бясплатным і адкрытым для ўсіх у будучыні. Калі вам падабаецца праграма, калі ласка, разгледзьце магчымасць падтрымаць мяне на GitHub!</string>
+    <string name="sponsor_msg">Links заўсёды будзе бясплатным і адкрытым для ўсіх. Калі вам падабаецца праграма, калі ласка, разгледзьце магчымасць падтрымаць мяне на GitHub!</string>
     <string name="sponsors">Спонсары</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">Сачыце за распрацоўшчыкам у Instagram для атрымання новых абнаўленняў</string>
@@ -110,7 +110,7 @@
     <string name="installer_auto_open">Праграма ўсталёўкі мусіць адкрыцца аўтаматычна.</string>
     <string name="stable">Стабільная</string>
     <string name="currently_unavailable">На дадзены момант недаступна</string>
-    <string name="preview">Папярэдні прагляд</string>
+    <string name="beta">Beta</string>
     <string name="early_access">Ранні доступ</string>
     <string name="pre_release_desc">Усталюйце папярэднія зборкі для прагляду новых функцый і зменаў.\n\nУ гэтых версіях магчыма нестабільнасць, таму, калі ласка, паведамляйце нам пра любыя праблемы, каб дапамагчы палепшыць праграму.</string>
     <string name="update_directory">Каталог абнаўленняў</string>

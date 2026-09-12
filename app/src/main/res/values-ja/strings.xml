@@ -37,7 +37,7 @@
     <string name="update">更新</string>
     <string name="telegram_channel">Telegram</string>
     <string name="sponsor">スポンサー</string>
-    <string name="sponsor_msg">Linksは将来もすべての人に対して常に無料かつオープンソースです。気に入っていただけましたら、GitHubでスポンサーになることをご検討ください！</string>
+    <string name="sponsor_msg">Linksはすべての人に対して常に無料かつオープンソースです。気に入っていただけましたら、GitHubでスポンサーになることをご検討ください！</string>
     <string name="sponsors">スポンサー</string>
     <string name="instagram">Instagram</string>
     <string name="instagram_desc">最新情報を入手するにはInstagramで開発者をフォローしてください</string>
@@ -110,7 +110,7 @@
     <string name="installer_auto_open">インストーラーが自動的に開くはずです。</string>
     <string name="stable">安定版</string>
     <string name="currently_unavailable">現在利用できません</string>
-    <string name="preview">プレビュー</string>
+    <string name="beta">Beta</string>
     <string name="early_access">早期アクセス</string>
     <string name="pre_release_desc">プレリリースビルドをインストールして、新しい機能や変更をプレビューします。\n\nこれらのバージョンには一部の不安定さが伴うため、将来のアプリ改善のために問題が発生した場合はお気軽にご意見をお寄せください。</string>
     <string name="update_directory">更新ディレクトリ</string>

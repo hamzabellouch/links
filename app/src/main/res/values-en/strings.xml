@@ -102,6 +102,8 @@
     <string name="generate_qr_for">Generate QR code for...</string>
     <string name="enter_text_or_url">Enter text or URL</string>
     <string name="enter_text_above_to_generate">Enter text above to generate</string>
+    <string name="enter_text_above">Enter text above</string>
+    <string name="to_generate_qr_code">to generate QR code</string>
     <string name="save_qr_code">Save QR Code</string>
     <string name="url_placeholder">http://example.com</string>
     <string name="contact_developer">Contact Developer</string>
@@ -117,7 +119,7 @@
     <string name="currently_unavailable">Currently unavailable</string>
     <string name="beta">Beta</string>
     <string name="early_access">Get new features</string>
-    <string name="pre_release_desc">Install pre-release builds to preview new features and changes.\n\nThere will be some instability in these versions, so please don\'t hesitate to give us feedback if you experience any problems to help us improve the app for the future.</string>
+    <string name="pre_release_desc">Install beta builds to preview new features and changes.\n\nThere will be some instability in these versions, so please don\'t hesitate to give us feedback if you experience any problems to help us improve the app for the future.</string>
     <string name="update_directory">Update directory</string>
     <string name="privacy_policy">Privacy policy</string>
     <string name="interface_interaction">Interface &amp; interaction</string>
@@ -128,4 +130,6 @@
     <string name="hide_navigation_labels_desc">Only show icons in the navigation bar</string>
     <string name="use_classic_taskbar">Use classic taskbar</string>
     <string name="use_classic_taskbar_desc">Switch back to the classic full-width navigation bar</string>
+    <string name="animate_taskbar_indicator">Animate taskbar indicator</string>
+    <string name="animate_taskbar_indicator_desc">Smoothly animate the indicator halo when switching tabs</string>
 </resources>

@@ -42,7 +42,16 @@ fun UpdateDialogImpl(
     onConfirmUpdate: () -> Unit,
     releaseNote: String,
     downloadStatus: UpdateUtil.DownloadStatus,
+    onOpenInFiles: () -> Unit = {},
 ) {
+    val context = LocalContext.current
+    val prefs = remember { context.getSharedPreferences("links_prefs", android.content.Context.MODE_PRIVATE) }
+    val autoInstall = prefs.getBoolean("auto_install_apk", true)
+    val canInstall = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        context.packageManager.canRequestPackageInstalls()
+    } else true
+    val isAutoInstallActive = autoInstall && canInstall
+
     AlertDialog(
         onDismissRequest = {},
         title = { Text(title) },
@@ -53,8 +62,17 @@ fun UpdateDialogImpl(
                     // No confirm button while downloading
                 }
                 is UpdateUtil.DownloadStatus.Finished -> {
-                    Button(onClick = onDismissRequest) {
-                        Text(stringResource(com.tkno.links.R.string.done))
+                    if (isAutoInstallActive) {
+                        Button(onClick = onDismissRequest) {
+                            Text(stringResource(com.tkno.links.R.string.done))
+                        }
+                    } else {
+                        Button(onClick = {
+                            onOpenInFiles()
+                            onDismissRequest()
+                        }) {
+                            Text(stringResource(com.tkno.links.R.string.open_in_files))
+                        }
                     }
                 }
                 else -> {
@@ -119,7 +137,11 @@ fun UpdateDialogImpl(
                                 modifier = Modifier.padding(bottom = 8.dp),
                             )
                             Text(
-                                text = stringResource(com.tkno.links.R.string.installer_auto_open),
+                                text = if (isAutoInstallActive) {
+                                    stringResource(com.tkno.links.R.string.installer_auto_open)
+                                } else {
+                                    stringResource(com.tkno.links.R.string.apk_saved_to_files)
+                                },
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -163,6 +185,9 @@ fun UpdateDialog(
         title = release.name ?: "New Update",
         releaseNote = release.body ?: "",
         downloadStatus = currentDownloadStatus,
+        onOpenInFiles = {
+            UpdateUtil.openApkLocation(context, release)
+        },
         onConfirmUpdate = {
             scope.launch(Dispatchers.IO) {
                 runCatching {
@@ -170,7 +195,17 @@ fun UpdateDialog(
                         currentDownloadStatus = status
                         if (status is UpdateUtil.DownloadStatus.Finished) {
                             withContext(Dispatchers.Main) {
-                                UpdateUtil.installLatestApk(context)
+                                val prefs = context.getSharedPreferences("links_prefs", android.content.Context.MODE_PRIVATE)
+                                val autoInstall = prefs.getBoolean("auto_install_apk", true)
+                                val canInstall = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                    context.packageManager.canRequestPackageInstalls()
+                                } else true
+
+                                if (autoInstall && canInstall) {
+                                    UpdateUtil.installLatestApk(context)
+                                } else {
+                                    UpdateUtil.openApkLocation(context, release)
+                                }
                             }
                         }
                     }

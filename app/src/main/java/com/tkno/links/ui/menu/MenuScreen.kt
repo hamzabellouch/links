@@ -76,8 +76,21 @@ enum class MenuSubScreen {
 }
 
 @Composable
-fun MenuScreen() {
+fun MenuScreen(
+    navigateToUpdate: Boolean = false,
+    triggerUpdate: Boolean = false,
+    onNavigateToUpdateConsumed: () -> Unit = {}
+) {
     var currentSubScreen by remember { mutableStateOf(MenuSubScreen.Main) }
+    var autoTriggerUpdate by remember { mutableStateOf(false) }
+
+    LaunchedEffect(navigateToUpdate, triggerUpdate) {
+        if (navigateToUpdate) {
+            currentSubScreen = MenuSubScreen.Update
+            autoTriggerUpdate = triggerUpdate
+            onNavigateToUpdateConsumed()
+        }
+    }
 
     BackHandler(enabled = currentSubScreen != MenuSubScreen.Main) {
         when (currentSubScreen) {
@@ -87,7 +100,10 @@ fun MenuScreen() {
             MenuSubScreen.Languages -> currentSubScreen = MenuSubScreen.LookAndFeel
             MenuSubScreen.DarkTheme -> currentSubScreen = MenuSubScreen.LookAndFeel
             MenuSubScreen.Credits -> currentSubScreen = MenuSubScreen.About
-            MenuSubScreen.Update -> currentSubScreen = MenuSubScreen.About
+            MenuSubScreen.Update -> {
+                autoTriggerUpdate = false
+                currentSubScreen = MenuSubScreen.About
+            }
             else -> currentSubScreen = MenuSubScreen.Main
         }
     }
@@ -138,7 +154,11 @@ fun MenuScreen() {
             onNavigateBack = { currentSubScreen = MenuSubScreen.About }
         )
         MenuSubScreen.Update -> UpdatePage(
-            onNavigateBack = { currentSubScreen = MenuSubScreen.About }
+            onNavigateBack = {
+                autoTriggerUpdate = false
+                currentSubScreen = MenuSubScreen.About
+            },
+            triggerUpdate = autoTriggerUpdate
         )
     }
 }
@@ -275,6 +295,7 @@ fun InterfaceAndInteractionPage(onNavigateBack: () -> Unit) {
 
     var hideLabels by remember { mutableStateOf(prefs.getBoolean("hide_navigation_labels", false)) }
     var useClassicTaskbar by remember { mutableStateOf(prefs.getBoolean("use_classic_taskbar", false)) }
+    var animateIndicator by remember { mutableStateOf(prefs.getBoolean("animate_taskbar_indicator", true)) }
 
     DisposableEffect(prefs) {
         val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
@@ -282,6 +303,8 @@ fun InterfaceAndInteractionPage(onNavigateBack: () -> Unit) {
                 hideLabels = p.getBoolean("hide_navigation_labels", false)
             } else if (key == "use_classic_taskbar") {
                 useClassicTaskbar = p.getBoolean("use_classic_taskbar", false)
+            } else if (key == "animate_taskbar_indicator") {
+                animateIndicator = p.getBoolean("animate_taskbar_indicator", true)
             }
         }
         prefs.registerOnSharedPreferenceChangeListener(listener)
@@ -323,6 +346,18 @@ fun InterfaceAndInteractionPage(onNavigateBack: () -> Unit) {
                     val newValue = !useClassicTaskbar
                     useClassicTaskbar = newValue
                     prefs.edit().putBoolean("use_classic_taskbar", newValue).apply()
+                }
+            )
+
+            PreferenceSwitch(
+                title = stringResource(R.string.animate_taskbar_indicator),
+                description = stringResource(R.string.animate_taskbar_indicator_desc),
+                icon = Icons.Outlined.Animation,
+                isChecked = animateIndicator,
+                onClick = {
+                    val newValue = !animateIndicator
+                    animateIndicator = newValue
+                    prefs.edit().putBoolean("animate_taskbar_indicator", newValue).apply()
                 }
             )
         }
@@ -1091,9 +1126,9 @@ fun AboutPage(
     AppUpdater(isAutoUpdateEnabled = isAutoUpdateEnabled)
 
     val versionName = try {
-        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "0.0.2-beta"
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "0.0.3-beta"
     } catch (e: Exception) {
-        "0.0.2-beta"
+        "0.0.3-beta"
     }
     val info = "App version: $versionName\nPackage name: ${context.packageName}\nDevice: Android ${android.os.Build.VERSION.RELEASE} (API ${android.os.Build.VERSION.SDK_INT})"
     val uriHandler = LocalUriHandler.current

@@ -112,7 +112,7 @@
     <string name="currently_unavailable">Derzeit nicht verfügbar</string>
     <string name="beta">Beta</string>
     <string name="early_access">Vorabzugang</string>
-    <string name="pre_release_desc">Installieren Sie Pre-Release-Builds, um neue Funktionen und Änderungen zu testen.\n\nDiese Versionen können instabil sein. Bitte zögern Sie nicht, uns Feedback zu geben, falls Probleme auftreten.</string>
+    <string name="pre_release_desc">Installieren Sie Beta-Builds, um neue Funktionen und Änderungen zu testen.\n\nDiese Versionen können instabil sein. Bitte zögern Sie nicht, uns Feedback zu geben, falls Probleme auftreten.</string>
     <string name="update_directory">Update-Verzeichnis</string>
 </resources>
 

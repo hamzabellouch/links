@@ -3,6 +3,9 @@ package com.tkno.links.ui.component
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,6 +35,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -77,10 +81,12 @@ fun FloatingBottomBar(
     onTabSelect: (Tab) -> Unit,
     reorderableTabs: SnapshotStateList<Tab>,
     hideLabels: Boolean = false,
+    animateIndicator: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
+    val density = LocalDensity.current
     val prefs = remember { context.getSharedPreferences("links_prefs", Context.MODE_PRIVATE) }
 
     var draggingIndex by remember { mutableStateOf<Int?>(null) }
@@ -106,52 +112,256 @@ fun FloatingBottomBar(
             tonalElevation = 6.dp,
             modifier = Modifier
                 .height(64.dp)
-                .fillMaxWidth()
-                .onGloballyPositioned { coordinates ->
-                    val totalWidth = coordinates.size.width.toFloat()
-                    if (totalWidth > 0) {
-                        itemWidthPx = totalWidth / 4f
-                    }
-                },
+                .fillMaxWidth(),
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.fillMaxSize().padding(horizontal = 6.dp),
-            ) {
-                // 1. Render Reorderable Tabs (ShortUrl, Security, QrCode)
-                reorderableTabs.forEachIndexed { index, tab ->
-                    val item = getTabItem(tab)
-                    val isSelected = selectedTab == item.tab
-                    val isDragging = draggingIndex == index
-                    val icon = if (isSelected) item.filledIcon else item.outlineIcon
-                    val label = stringResource(item.labelRes)
+            BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                val itemCount = (reorderableTabs.size + 1).coerceAtLeast(1)
+                val horizontalPadding = 6.dp
+                val verticalPadding = 6.dp
+                val itemSpacing = 4.dp
 
-                    val indicatorColor by
+                val totalSpacing = itemSpacing * (itemCount - 1)
+                val totalSidePadding = horizontalPadding * 2
+                val singleIndicatorWidth = (maxWidth - totalSidePadding - totalSpacing) / itemCount
+                val step = singleIndicatorWidth + itemSpacing
+
+                itemWidthPx = with(density) { step.toPx() }
+
+                val selectedIndex = if (selectedTab == Tab.Menu) {
+                    reorderableTabs.size
+                } else {
+                    val idx = reorderableTabs.indexOf(selectedTab)
+                    if (idx != -1) idx else 0
+                }
+
+                val clampedIndex = selectedIndex.coerceIn(0, itemCount - 1)
+                val targetOffsetX = horizontalPadding + (step * clampedIndex)
+
+                // أنيميشن حركة الهالة الانزلاقية (Spring Physics) - مفعلة عند تفعيل الخيار
+                if (animateIndicator) {
+                    val animatedOffsetX by animateDpAsState(
+                        targetValue = targetOffsetX,
+                        animationSpec = spring(
+                            dampingRatio = 0.8f,
+                            stiffness = Spring.StiffnessMediumLow
+                        ),
+                        label = "indicatorOffsetX"
+                    )
+
+                    // عنصر الهالة / المؤشر المنزلق في الخلفية
+                    Box(
+                        modifier = Modifier
+                            .offset(x = animatedOffsetX)
+                            .width(singleIndicatorWidth)
+                            .fillMaxHeight(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Box(
+                            modifier = if (hideLabels) {
+                                Modifier
+                                    .height(44.dp)
+                                    .width(56.dp)
+                                    .clip(RoundedCornerShape(percent = 50))
+                                    .background(indicatorCapsuleColor)
+                            } else {
+                                Modifier
+                                    .fillMaxHeight()
+                                    .fillMaxWidth()
+                                    .padding(vertical = verticalPadding)
+                                    .clip(RoundedCornerShape(percent = 50))
+                                    .background(indicatorCapsuleColor)
+                            }
+                        )
+                    }
+                }
+
+                // صف الأيقونات والتبويبات
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(itemSpacing),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = horizontalPadding),
+                ) {
+                    // 1. Render Reorderable Tabs (ShortUrl, Security, QrCode)
+                    reorderableTabs.forEachIndexed { index, tab ->
+                        val item = getTabItem(tab)
+                        val isSelected = selectedTab == item.tab
+                        val isDragging = draggingIndex == index
+                        val icon = if (isSelected) item.filledIcon else item.outlineIcon
+                        val label = stringResource(item.labelRes)
+
+                        val staticIndicatorColor by
+                            animateColorAsState(
+                                targetValue =
+                                    if (isSelected && !animateIndicator) indicatorCapsuleColor
+                                    else Color.Transparent,
+                                animationSpec = tween(250),
+                                label = "staticIndicatorColor",
+                            )
+
+                        val iconTint by
+                            animateColorAsState(
+                                targetValue =
+                                    if (isSelected) activeColor
+                                    else inactiveColor,
+                                animationSpec = tween(250),
+                                label = "iconTint",
+                            )
+
+                        val textColor by
+                            animateColorAsState(
+                                targetValue =
+                                    if (isSelected) activeColor
+                                    else inactiveColor.copy(alpha = 0.8f),
+                                animationSpec = tween(250),
+                                label = "textColor",
+                            )
+
+                        Box(
+                            modifier =
+                                Modifier
+                                    .weight(1f)
+                                    .fillMaxHeight()
+                                    .zIndex(if (isDragging) 10f else 1f)
+                                    .graphicsLayer {
+                                        if (isDragging) {
+                                            translationX = currentDragOffset
+                                            scaleX = 1.12f
+                                            scaleY = 1.12f
+                                        }
+                                    }
+                                    .clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null,
+                                    ) {
+                                        onTabSelect(tab)
+                                    }
+                                    .pointerInput(tab, index) {
+                                        detectDragGesturesAfterLongPress(
+                                            onDragStart = {
+                                                draggingIndex = index
+                                                currentDragOffset = 0f
+                                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                            },
+                                            onDragEnd = {
+                                                draggingIndex = null
+                                                currentDragOffset = 0f
+                                            },
+                                            onDragCancel = {
+                                                draggingIndex = null
+                                                currentDragOffset = 0f
+                                            },
+                                            onDrag = { change, dragAmount ->
+                                                change.consume()
+                                                val activeIndex = draggingIndex ?: return@detectDragGesturesAfterLongPress
+                                                currentDragOffset += dragAmount.x
+
+                                                val threshold = if (itemWidthPx > 0f) itemWidthPx * 0.5f else 80f
+
+                                                if (currentDragOffset > threshold && activeIndex < reorderableTabs.size - 1) {
+                                                    val temp = reorderableTabs[activeIndex]
+                                                    reorderableTabs[activeIndex] = reorderableTabs[activeIndex + 1]
+                                                    reorderableTabs[activeIndex + 1] = temp
+                                                    draggingIndex = activeIndex + 1
+                                                    currentDragOffset -= itemWidthPx
+                                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                    saveNavOrder(prefs, reorderableTabs)
+                                                } else if (currentDragOffset < -threshold && activeIndex > 0) {
+                                                    val temp = reorderableTabs[activeIndex]
+                                                    reorderableTabs[activeIndex] = reorderableTabs[activeIndex - 1]
+                                                    reorderableTabs[activeIndex - 1] = temp
+                                                    draggingIndex = activeIndex - 1
+                                                    currentDragOffset += itemWidthPx
+                                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                    saveNavOrder(prefs, reorderableTabs)
+                                                }
+                                            }
+                                        )
+                                    },
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Box(
+                                modifier =
+                                    if (!animateIndicator) {
+                                        if (hideLabels) {
+                                            Modifier.height(44.dp)
+                                                .width(56.dp)
+                                                .clip(RoundedCornerShape(percent = 50))
+                                                .background(staticIndicatorColor)
+                                        } else {
+                                            Modifier.fillMaxHeight()
+                                                .padding(vertical = verticalPadding)
+                                                .fillMaxWidth()
+                                                .clip(RoundedCornerShape(percent = 50))
+                                                .background(staticIndicatorColor)
+                                        }
+                                    } else {
+                                        Modifier.fillMaxSize()
+                                    },
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center,
+                                    modifier = Modifier.padding(horizontal = 2.dp),
+                                ) {
+                                    Icon(
+                                        imageVector = icon,
+                                        contentDescription = label,
+                                        tint = iconTint,
+                                        modifier = Modifier.size(if (hideLabels) 24.dp else 22.dp),
+                                    )
+                                    if (!hideLabels) {
+                                        Text(
+                                            text = label,
+                                            style =
+                                                MaterialTheme.typography.labelSmall.copy(
+                                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
+                                                    fontSize = 11.sp,
+                                                ),
+                                            color = textColor,
+                                            maxLines = 1,
+                                            modifier = Modifier.padding(top = 2.dp),
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // 2. Render Fixed Menu Tab
+                    val menuTab = Tab.Menu
+                    val menuItem = getTabItem(menuTab)
+                    val isMenuSelected = selectedTab == menuTab
+                    val menuIcon = if (isMenuSelected) menuItem.filledIcon else menuItem.outlineIcon
+                    val menuLabel = stringResource(menuItem.labelRes)
+
+                    val staticMenuIndicatorColor by
                         animateColorAsState(
                             targetValue =
-                                if (isSelected) indicatorCapsuleColor
+                                if (isMenuSelected && !animateIndicator) indicatorCapsuleColor
                                 else Color.Transparent,
                             animationSpec = tween(250),
-                            label = "indicatorColor",
+                            label = "staticMenuIndicatorColor",
                         )
 
-                    val iconTint by
+                    val menuIconTint by
                         animateColorAsState(
                             targetValue =
-                                if (isSelected) activeColor
+                                if (isMenuSelected) activeColor
                                 else inactiveColor,
                             animationSpec = tween(250),
-                            label = "iconTint",
+                            label = "menuIconTint",
                         )
 
-                    val textColor by
+                    val menuTextColor by
                         animateColorAsState(
                             targetValue =
-                                if (isSelected) activeColor
+                                if (isMenuSelected) activeColor
                                 else inactiveColor.copy(alpha = 0.8f),
                             animationSpec = tween(250),
-                            label = "textColor",
+                            label = "menuTextColor",
                         )
 
                     Box(
@@ -159,77 +369,31 @@ fun FloatingBottomBar(
                             Modifier
                                 .weight(1f)
                                 .fillMaxHeight()
-                                .zIndex(if (isDragging) 10f else 1f)
-                                .graphicsLayer {
-                                    if (isDragging) {
-                                        translationX = currentDragOffset
-                                        scaleX = 1.12f
-                                        scaleY = 1.12f
-                                    }
-                                }
                                 .clickable(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null,
                                 ) {
-                                    onTabSelect(tab)
-                                }
-                                .pointerInput(tab, index) {
-                                    detectDragGesturesAfterLongPress(
-                                        onDragStart = {
-                                            draggingIndex = index
-                                            currentDragOffset = 0f
-                                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                        },
-                                        onDragEnd = {
-                                            draggingIndex = null
-                                            currentDragOffset = 0f
-                                        },
-                                        onDragCancel = {
-                                            draggingIndex = null
-                                            currentDragOffset = 0f
-                                        },
-                                        onDrag = { change, dragAmount ->
-                                            change.consume()
-                                            val activeIndex = draggingIndex ?: return@detectDragGesturesAfterLongPress
-                                            currentDragOffset += dragAmount.x
-
-                                            val threshold = if (itemWidthPx > 0f) itemWidthPx * 0.5f else 80f
-
-                                            if (currentDragOffset > threshold && activeIndex < reorderableTabs.size - 1) {
-                                                val temp = reorderableTabs[activeIndex]
-                                                reorderableTabs[activeIndex] = reorderableTabs[activeIndex + 1]
-                                                reorderableTabs[activeIndex + 1] = temp
-                                                draggingIndex = activeIndex + 1
-                                                currentDragOffset -= itemWidthPx
-                                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                                saveNavOrder(prefs, reorderableTabs)
-                                            } else if (currentDragOffset < -threshold && activeIndex > 0) {
-                                                val temp = reorderableTabs[activeIndex]
-                                                reorderableTabs[activeIndex] = reorderableTabs[activeIndex - 1]
-                                                reorderableTabs[activeIndex - 1] = temp
-                                                draggingIndex = activeIndex - 1
-                                                currentDragOffset += itemWidthPx
-                                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                                saveNavOrder(prefs, reorderableTabs)
-                                            }
-                                        }
-                                    )
+                                    onTabSelect(menuTab)
                                 },
                         contentAlignment = Alignment.Center,
                     ) {
                         Box(
                             modifier =
-                                if (hideLabels) {
-                                    Modifier.height(44.dp)
-                                        .width(56.dp)
-                                        .clip(RoundedCornerShape(percent = 50))
-                                        .background(indicatorColor)
+                                if (!animateIndicator) {
+                                    if (hideLabels) {
+                                        Modifier.height(44.dp)
+                                            .width(56.dp)
+                                            .clip(RoundedCornerShape(percent = 50))
+                                            .background(staticMenuIndicatorColor)
+                                    } else {
+                                        Modifier.fillMaxHeight()
+                                            .padding(vertical = verticalPadding)
+                                            .fillMaxWidth()
+                                            .clip(RoundedCornerShape(percent = 50))
+                                            .background(staticMenuIndicatorColor)
+                                    }
                                 } else {
-                                    Modifier.fillMaxHeight()
-                                        .padding(vertical = 6.dp)
-                                        .fillMaxWidth()
-                                        .clip(RoundedCornerShape(percent = 50))
-                                        .background(indicatorColor)
+                                    Modifier.fillMaxSize()
                                 },
                             contentAlignment = Alignment.Center,
                         ) {
@@ -239,115 +403,24 @@ fun FloatingBottomBar(
                                 modifier = Modifier.padding(horizontal = 2.dp),
                             ) {
                                 Icon(
-                                    imageVector = icon,
-                                    contentDescription = label,
-                                    tint = iconTint,
+                                    imageVector = menuIcon,
+                                    contentDescription = menuLabel,
+                                    tint = menuIconTint,
                                     modifier = Modifier.size(if (hideLabels) 24.dp else 22.dp),
                                 )
                                 if (!hideLabels) {
                                     Text(
-                                        text = label,
+                                        text = menuLabel,
                                         style =
                                             MaterialTheme.typography.labelSmall.copy(
-                                                fontWeight = FontWeight.SemiBold,
+                                                fontWeight = if (isMenuSelected) FontWeight.Bold else FontWeight.SemiBold,
                                                 fontSize = 11.sp,
                                             ),
-                                        color = textColor,
+                                        color = menuTextColor,
                                         maxLines = 1,
                                         modifier = Modifier.padding(top = 2.dp),
                                     )
                                 }
-                            }
-                        }
-                    }
-                }
-
-                // 2. Render Fixed Menu Tab
-                val menuTab = Tab.Menu
-                val menuItem = getTabItem(menuTab)
-                val isMenuSelected = selectedTab == menuTab
-                val menuIcon = if (isMenuSelected) menuItem.filledIcon else menuItem.outlineIcon
-                val menuLabel = stringResource(menuItem.labelRes)
-
-                val menuIndicatorColor by
-                    animateColorAsState(
-                        targetValue =
-                            if (isMenuSelected) indicatorCapsuleColor
-                            else Color.Transparent,
-                        animationSpec = tween(250),
-                        label = "menuIndicatorColor",
-                    )
-
-                val menuIconTint by
-                    animateColorAsState(
-                        targetValue =
-                            if (isMenuSelected) activeColor
-                            else inactiveColor,
-                        animationSpec = tween(250),
-                        label = "menuIconTint",
-                    )
-
-                val menuTextColor by
-                    animateColorAsState(
-                        targetValue =
-                            if (isMenuSelected) activeColor
-                            else inactiveColor.copy(alpha = 0.8f),
-                        animationSpec = tween(250),
-                        label = "menuTextColor",
-                    )
-
-                Box(
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                            ) {
-                                onTabSelect(menuTab)
-                            },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Box(
-                        modifier =
-                            if (hideLabels) {
-                                Modifier.height(44.dp)
-                                    .width(56.dp)
-                                    .clip(RoundedCornerShape(percent = 50))
-                                    .background(menuIndicatorColor)
-                            } else {
-                                Modifier.fillMaxHeight()
-                                    .padding(vertical = 6.dp)
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(percent = 50))
-                                    .background(menuIndicatorColor)
-                            },
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.padding(horizontal = 2.dp),
-                        ) {
-                            Icon(
-                                imageVector = menuIcon,
-                                contentDescription = menuLabel,
-                                tint = menuIconTint,
-                                modifier = Modifier.size(if (hideLabels) 24.dp else 22.dp),
-                            )
-                            if (!hideLabels) {
-                                Text(
-                                    text = menuLabel,
-                                    style =
-                                        MaterialTheme.typography.labelSmall.copy(
-                                            fontWeight = FontWeight.SemiBold,
-                                            fontSize = 11.sp,
-                                        ),
-                                    color = menuTextColor,
-                                    maxLines = 1,
-                                    modifier = Modifier.padding(top = 2.dp),
-                                )
                             }
                         }
                     }

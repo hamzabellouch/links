@@ -26,7 +26,13 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import java.util.Locale
 
+import android.content.Intent
+import com.tkno.links.util.UpdateNotificationHelper
+
 class MainActivity : ComponentActivity() {
+  private var navigateToUpdateState = mutableStateOf(false)
+  private var triggerUpdateState = mutableStateOf(false)
+
   override fun attachBaseContext(newBase: Context) {
     val prefs = newBase.getSharedPreferences("links_prefs", Context.MODE_PRIVATE)
     val appLanguage = prefs.getString("app_language", "system") ?: "system"
@@ -41,8 +47,26 @@ class MainActivity : ComponentActivity() {
     }
   }
 
+  override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+    setIntent(intent)
+    handleIntent(intent)
+  }
+
+  private fun handleIntent(intent: Intent?) {
+    if (intent == null) return
+    val navigateTo = intent.getStringExtra(UpdateNotificationHelper.EXTRA_NAVIGATE_TO)
+    val trigger = intent.getBooleanExtra(UpdateNotificationHelper.EXTRA_TRIGGER_UPDATE, false)
+    if (navigateTo == UpdateNotificationHelper.NAV_TARGET_AUTO_UPDATE) {
+      navigateToUpdateState.value = true
+      triggerUpdateState.value = trigger
+    }
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    UpdateNotificationHelper.createNotificationChannel(this)
+    handleIntent(intent)
 
     enableEdgeToEdge()
     setContent {
@@ -132,7 +156,14 @@ class MainActivity : ComponentActivity() {
           dynamicColor = dynamicColorPref
         ) {
           Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            MainScreen()
+            MainScreen(
+              navigateToUpdate = navigateToUpdateState.value,
+              triggerUpdate = triggerUpdateState.value,
+              onNavigateToUpdateConsumed = {
+                navigateToUpdateState.value = false
+                triggerUpdateState.value = false
+              }
+            )
           }
         }
       }

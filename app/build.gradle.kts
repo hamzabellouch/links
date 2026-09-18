@@ -11,8 +11,8 @@ android {
         applicationId = "com.tkno.links"
         minSdk = 24
         targetSdk = 36
-        versionCode = 2
-        versionName = "0.0.2-beta"
+        versionCode = 3
+        versionName = "0.0.3-beta"
     }
 
     buildTypes {
@@ -50,7 +50,7 @@ android {
 val androidComponents = project.extensions.getByType<com.android.build.api.variant.ApplicationAndroidComponentsExtension>()
 androidComponents.onVariants { variant ->
     variant.outputs.forEach { output ->
-        (output as? com.android.build.api.variant.impl.VariantOutputImpl)?.outputFileName?.set("Links-v0.0.2-beta-${variant.name}.apk")
+        (output as? com.android.build.api.variant.impl.VariantOutputImpl)?.outputFileName?.set("Links-v0.0.3-beta-${variant.name}.apk")
     }
 }
 
@@ -103,4 +103,5 @@ dependencies {
   // Networking (for auto-update)
   implementation(libs.okhttp)
   implementation(libs.kotlinx.serialization.json)
+  implementation(libs.androidx.documentfile)
 }

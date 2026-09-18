@@ -112,7 +112,7 @@
     <string name="currently_unavailable">Kasalukuyang hindi available</string>
     <string name="beta">Beta</string>
     <string name="early_access">Maagang pag-access</string>
-    <string name="pre_release_desc">I-install ang mga pre-release na build upang ma-preview ang mga bagong tampok at pagbabago.\n\nMay ilang kawalan ng katatagan sa mga bersyong ito, kaya mangyaring huwag mag-atubiling magbigay sa amin ng feedback kung makaranas ka ng anumang problema upang matulungan kaming mapabuti ang app para sa hinaharap.</string>
+    <string name="pre_release_desc">I-install ang mga beta build upang ma-preview ang mga bagong tampok at pagbabago.\n\nMay ilang kawalan ng katatagan sa mga bersyong ito, kaya mangyaring huwag mag-atubiling magbigay sa amin ng feedback kung makaranas ka ng anumang problema upang matulungan kaming mapabuti ang app para sa hinaharap.</string>
     <string name="update_directory">Direktoryo ng update</string>
 </resources>
 

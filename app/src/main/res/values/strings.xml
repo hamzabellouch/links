@@ -13,6 +13,7 @@
     <string name="readme_desc">Check the GitHub repository and the README</string>
     <string name="readme" translatable="false">README</string>
     <string name="image">Image</string>
+    <string name="pdf" translatable="false">PDF</string>
     <string name="credits">Credits</string>
     <string name="credits_desc">Credits and libre software</string>
     <string name="display">Display</string>
@@ -106,6 +107,8 @@
     <string name="generate_qr_for">Generate QR code for...</string>
     <string name="enter_text_or_url">Enter text or URL</string>
     <string name="enter_text_above_to_generate">Enter text above to generate</string>
+    <string name="enter_text_above">Enter text above</string>
+    <string name="to_generate_qr_code">to generate QR code</string>
     <string name="save_qr_code">Save QR Code</string>
     <string name="url_placeholder">http://example.com</string>
     <string name="contact_developer">Contact Developer</string>
@@ -121,7 +124,7 @@
     <string name="currently_unavailable">Currently unavailable</string>
     <string name="beta">Beta</string>
     <string name="early_access">Get new features</string>
-    <string name="pre_release_desc">Install pre-release builds to preview new features and changes.\n\nThere will be some instability in these versions, so please don\'t hesitate to give us feedback if you experience any problems to help us improve the app for the future.</string>
+    <string name="pre_release_desc">Install beta builds to preview new features and changes.\n\nThere will be some instability in these versions, so please don\'t hesitate to give us feedback if you experience any problems to help us improve the app for the future.</string>
     <string name="update_directory">Update directory</string>
     <string name="whats_new">What\'s New</string>
     <string name="privacy_policy">Privacy policy</string>
@@ -152,7 +155,7 @@
     <string name="undetected">Undetected</string>
     <string name="detection_score">Detection Score</string>
     <string name="community_score">Reputation</string>
-    <string name="security_scan">Security</string>
+    <string name="security_scan">Check URL</string>
     <string name="security_url_placeholder">http://example.com</string>
     <string name="interface_interaction">Interface &amp; interaction</string>
     <string name="interface_interaction_desc">Navigation, gestures, UI behavior</string>
@@ -162,4 +165,17 @@
     <string name="hide_navigation_labels_desc">Only show icons in the navigation bar</string>
     <string name="use_classic_taskbar">Use classic taskbar</string>
     <string name="use_classic_taskbar_desc">Switch back to the classic full-width navigation bar</string>
+    <string name="animate_taskbar_indicator">Animate taskbar indicator</string>
+    <string name="animate_taskbar_indicator_desc">Smoothly animate the indicator halo when switching tabs</string>
+    <string name="update_notification_channel_name">App Updates</string>
+    <string name="update_notification_channel_desc">Notifications about new versions of Links</string>
+    <string name="update_available_title">New update available: %s</string>
+    <string name="update_available_desc">A new version of Links is available. Tap to download and install.</string>
+    <string name="auto_install_update">Auto install update</string>
+    <string name="install_permission_granted">Install permission granted</string>
+    <string name="open_in_files">Open in Files</string>
+    <string name="apk_saved_to_files">Update downloaded. Open in Files to install.</string>
+    <string name="downloading_update_notification">Downloading update: %s</string>
+    <string name="update_download_completed_title">Update downloaded: %s</string>
+    <string name="update_download_completed_desc">Download finished. Go to Files to update the app.</string>
 </resources>

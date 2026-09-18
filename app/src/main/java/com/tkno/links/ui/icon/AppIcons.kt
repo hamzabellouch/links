@@ -303,3 +303,320 @@ public val Dashboard2: ImageVector
     }
 
 private var _dashboard2: ImageVector? = null
+
+public val PictureAsPdf: ImageVector
+    get() {
+        if (_pictureAsPdf != null) {
+            return _pictureAsPdf!!
+        }
+        _pictureAsPdf = ImageVector.Builder(
+            name = "picture_as_pdf",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f,
+        ).apply {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1f,
+                stroke = null,
+                strokeAlpha = 1f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Bevel,
+                strokeLineMiter = 1f,
+                pathFillType = PathFillType.NonZero,
+            ) {
+                moveTo(9f, 12.5f)
+                horizontalLineToRelative(1f)
+                verticalLineToRelative(-2f)
+                horizontalLineToRelative(1f)
+                quadToRelative(0.43f, 0f, 0.71f, -0.29f)
+                reflectiveQuadTo(12f, 9.5f)
+                verticalLineToRelative(-1f)
+                quadTo(12f, 8.07f, 11.71f, 7.79f)
+                reflectiveQuadTo(11f, 7.5f)
+                horizontalLineTo(9f)
+                verticalLineToRelative(5f)
+                close()
+                moveToRelative(1f, -3f)
+                verticalLineToRelative(-1f)
+                horizontalLineToRelative(1f)
+                verticalLineToRelative(1f)
+                horizontalLineTo(10f)
+                close()
+                moveToRelative(3f, 3f)
+                horizontalLineToRelative(2f)
+                quadToRelative(0.43f, 0f, 0.71f, -0.29f)
+                quadTo(16f, 11.93f, 16f, 11.5f)
+                verticalLineToRelative(-3f)
+                quadTo(16f, 8.07f, 15.71f, 7.79f)
+                reflectiveQuadTo(15f, 7.5f)
+                horizontalLineTo(13f)
+                verticalLineToRelative(5f)
+                close()
+                moveToRelative(1f, -1f)
+                verticalLineToRelative(-3f)
+                horizontalLineToRelative(1f)
+                verticalLineToRelative(3f)
+                horizontalLineTo(14f)
+                close()
+                moveToRelative(3f, 1f)
+                horizontalLineToRelative(1f)
+                verticalLineToRelative(-2f)
+                horizontalLineToRelative(1f)
+                verticalLineToRelative(-1f)
+                horizontalLineTo(18f)
+                verticalLineToRelative(-1f)
+                horizontalLineToRelative(1f)
+                verticalLineToRelative(-1f)
+                horizontalLineTo(17f)
+                verticalLineToRelative(5f)
+                close()
+                moveTo(8f, 18f)
+                quadTo(7.18f, 18f, 6.59f, 17.41f)
+                reflectiveQuadTo(6f, 16f)
+                verticalLineTo(4f)
+                quadTo(6f, 3.17f, 6.59f, 2.59f)
+                reflectiveQuadTo(8f, 2f)
+                horizontalLineTo(20f)
+                quadToRelative(0.83f, 0f, 1.41f, 0.59f)
+                reflectiveQuadTo(22f, 4f)
+                verticalLineTo(16f)
+                quadToRelative(0f, 0.82f, -0.59f, 1.41f)
+                reflectiveQuadTo(20f, 18f)
+                horizontalLineTo(8f)
+                close()
+                moveTo(8f, 16f)
+                horizontalLineTo(20f)
+                verticalLineTo(4f)
+                horizontalLineTo(8f)
+                verticalLineTo(16f)
+                close()
+                moveTo(4f, 22f)
+                quadTo(3.18f, 22f, 2.59f, 21.41f)
+                reflectiveQuadTo(2f, 20f)
+                verticalLineTo(6f)
+                horizontalLineTo(4f)
+                verticalLineTo(20f)
+                horizontalLineTo(18f)
+                verticalLineToRelative(2f)
+                horizontalLineTo(4f)
+                close()
+                moveTo(8f, 4f)
+                verticalLineTo(16f)
+                verticalLineTo(4f)
+                close()
+            }
+        }.build()
+        return _pictureAsPdf!!
+    }
+
+private var _pictureAsPdf: ImageVector? = null
+
+public val CenterFocusWeak: ImageVector
+    get() {
+        if (_centerFocusWeak != null) {
+            return _centerFocusWeak!!
+        }
+        _centerFocusWeak = ImageVector.Builder(
+            name = "center_focus_weak",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f,
+        ).apply {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1f,
+                stroke = null,
+                strokeAlpha = 1f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Bevel,
+                strokeLineMiter = 1f,
+                pathFillType = PathFillType.NonZero,
+            ) {
+                moveTo(9.18f, 14.83f)
+                quadTo(8f, 13.65f, 8f, 12f)
+                reflectiveQuadTo(9.18f, 9.17f)
+                reflectiveQuadTo(12f, 8f)
+                reflectiveQuadToRelative(2.83f, 1.17f)
+                reflectiveQuadTo(16f, 12f)
+                reflectiveQuadToRelative(-1.17f, 2.82f)
+                reflectiveQuadTo(12f, 16f)
+                reflectiveQuadTo(9.18f, 14.83f)
+                close()
+                moveToRelative(4.24f, -1.41f)
+                quadTo(14f, 12.83f, 14f, 12f)
+                reflectiveQuadTo(13.41f, 10.59f)
+                reflectiveQuadTo(12f, 10f)
+                reflectiveQuadToRelative(-1.41f, 0.59f)
+                quadTo(10f, 11.18f, 10f, 12f)
+                reflectiveQuadToRelative(0.59f, 1.41f)
+                reflectiveQuadTo(12f, 14f)
+                reflectiveQuadToRelative(1.41f, -0.59f)
+                close()
+                moveTo(12f, 12f)
+                close()
+                moveTo(5f, 21f)
+                quadTo(4.18f, 21f, 3.59f, 20.41f)
+                reflectiveQuadTo(3f, 19f)
+                verticalLineTo(15f)
+                horizontalLineTo(5f)
+                verticalLineToRelative(4f)
+                horizontalLineTo(9f)
+                verticalLineToRelative(2f)
+                horizontalLineTo(5f)
+                close()
+                moveToRelative(10f, 0f)
+                verticalLineTo(19f)
+                horizontalLineToRelative(4f)
+                verticalLineTo(15f)
+                horizontalLineToRelative(2f)
+                verticalLineToRelative(4f)
+                quadToRelative(0f, 0.82f, -0.59f, 1.41f)
+                reflectiveQuadTo(19f, 21f)
+                horizontalLineTo(15f)
+                close()
+                moveTo(3f, 9f)
+                verticalLineTo(5f)
+                quadTo(3f, 4.17f, 3.59f, 3.59f)
+                reflectiveQuadTo(5f, 3f)
+                horizontalLineTo(9f)
+                verticalLineTo(5f)
+                horizontalLineTo(5f)
+                verticalLineTo(9f)
+                horizontalLineTo(3f)
+                close()
+                moveTo(19f, 9f)
+                verticalLineTo(5f)
+                horizontalLineTo(15f)
+                verticalLineTo(3f)
+                horizontalLineToRelative(4f)
+                quadToRelative(0.83f, 0f, 1.41f, 0.59f)
+                reflectiveQuadTo(21f, 5f)
+                verticalLineTo(9f)
+                horizontalLineTo(19f)
+                close()
+            }
+        }.build()
+        return _centerFocusWeak!!
+    }
+
+private var _centerFocusWeak: ImageVector? = null
+
+public val QrCodeIcon: ImageVector
+    get() {
+        if (_qrCodeIcon != null) {
+            return _qrCodeIcon!!
+        }
+        _qrCodeIcon = ImageVector.Builder(
+            name = "qr_code",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f,
+        ).apply {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1f,
+                stroke = null,
+                strokeAlpha = 1f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Bevel,
+                strokeLineMiter = 1f,
+                pathFillType = PathFillType.NonZero,
+            ) {
+                moveTo(3f, 11f)
+                verticalLineTo(3f)
+                horizontalLineToRelative(8f)
+                verticalLineToRelative(8f)
+                horizontalLineTo(3f)
+                close()
+                moveTo(5f, 9f)
+                horizontalLineTo(9f)
+                verticalLineTo(5f)
+                horizontalLineTo(5f)
+                verticalLineTo(9f)
+                close()
+                moveTo(3f, 21f)
+                verticalLineTo(13f)
+                horizontalLineToRelative(8f)
+                verticalLineToRelative(8f)
+                horizontalLineTo(3f)
+                close()
+                moveTo(5f, 19f)
+                horizontalLineTo(9f)
+                verticalLineTo(15f)
+                horizontalLineTo(5f)
+                verticalLineToRelative(4f)
+                close()
+                moveToRelative(8f, -8f)
+                verticalLineTo(3f)
+                horizontalLineToRelative(8f)
+                verticalLineToRelative(8f)
+                horizontalLineTo(13f)
+                close()
+                moveTo(15f, 9f)
+                horizontalLineToRelative(4f)
+                verticalLineTo(5f)
+                horizontalLineTo(15f)
+                verticalLineTo(9f)
+                close()
+                moveToRelative(4f, 12f)
+                verticalLineTo(19f)
+                horizontalLineToRelative(2f)
+                verticalLineToRelative(2f)
+                horizontalLineTo(19f)
+                close()
+                moveTo(13f, 15f)
+                verticalLineTo(13f)
+                horizontalLineToRelative(2f)
+                verticalLineToRelative(2f)
+                horizontalLineTo(13f)
+                close()
+                moveToRelative(2f, 2f)
+                verticalLineTo(15f)
+                horizontalLineToRelative(2f)
+                verticalLineToRelative(2f)
+                horizontalLineTo(15f)
+                close()
+                moveToRelative(-2f, 2f)
+                verticalLineTo(17f)
+                horizontalLineToRelative(2f)
+                verticalLineToRelative(2f)
+                horizontalLineTo(13f)
+                close()
+                moveToRelative(2f, 2f)
+                verticalLineTo(19f)
+                horizontalLineToRelative(2f)
+                verticalLineToRelative(2f)
+                horizontalLineTo(15f)
+                close()
+                moveToRelative(2f, -2f)
+                verticalLineTo(17f)
+                horizontalLineToRelative(2f)
+                verticalLineToRelative(2f)
+                horizontalLineTo(17f)
+                close()
+                moveToRelative(0f, -4f)
+                verticalLineTo(13f)
+                horizontalLineToRelative(2f)
+                verticalLineToRelative(2f)
+                horizontalLineTo(17f)
+                close()
+                moveToRelative(2f, 2f)
+                verticalLineTo(15f)
+                horizontalLineToRelative(2f)
+                verticalLineToRelative(2f)
+                horizontalLineTo(19f)
+                close()
+            }
+        }.build()
+        return _qrCodeIcon!!
+    }
+
+private var _qrCodeIcon: ImageVector? = null
+

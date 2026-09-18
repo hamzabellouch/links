@@ -58,6 +58,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.compose.material.icons.outlined.Image
+import com.tkno.links.ui.icon.QrCodeIcon
+import com.tkno.links.ui.icon.CenterFocusWeak
+import com.tkno.links.ui.icon.PictureAsPdf
 import androidx.compose.material.icons.outlined.Cameraswitch
 import androidx.compose.material.icons.outlined.ZoomIn
 import androidx.compose.material.icons.outlined.ZoomOut
@@ -951,26 +954,57 @@ fun ScanContent(
                     shape = RoundedCornerShape(50),
                     modifier = Modifier.fillMaxWidth(0.9f)
                 ) {
+                    Icon(
+                        imageVector = CenterFocusWeak,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp).padding(end = 6.dp),
+                    )
                     Text(text = stringResource(R.string.scan_now), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Button(
-                    onClick = { galleryLauncher.launch("image/*") },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                    ),
-                    shape = RoundedCornerShape(50),
-                    modifier = Modifier.fillMaxWidth(0.9f)
+                Row(
+                    modifier = Modifier.fillMaxWidth(0.9f),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Image,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp).padding(end = 6.dp),
-                    )
-                    Text(text = stringResource(R.string.image), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                    Button(
+                        onClick = { galleryLauncher.launch("image/*") },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                        ),
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Image,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp).padding(end = 6.dp),
+                        )
+                        Text(text = stringResource(R.string.image), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                    }
+
+                    Button(
+                        onClick = { /* PDF scanning will be implemented */ },
+                        enabled = false,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                            disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f),
+                            disabledContentColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.35f),
+                        ),
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(
+                            imageVector = PictureAsPdf,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp).padding(end = 6.dp),
+                        )
+                        Text(text = stringResource(R.string.pdf), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                    }
                 }
             }
         } else {
@@ -1227,22 +1261,39 @@ fun GenerateContent(
                     modifier = Modifier.fillMaxSize(),
                 )
             } else {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.QrCodeScanner,
+                        imageVector = QrCodeIcon,
                         contentDescription = null,
                         tint = softBlue,
-                        modifier = Modifier.size(64.dp),
+                        modifier = Modifier.size(48.dp),
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = stringResource(R.string.enter_text_above_to_generate),
-                        color = Color.White.copy(alpha = 0.9f),
-                        fontSize = 14.sp,
-                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.Start,
+                    ) {
+                        Text(
+                            text = stringResource(R.string.enter_text_above),
+                            color = Color.White.copy(alpha = 0.95f),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            lineHeight = 18.sp,
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = stringResource(R.string.to_generate_qr_code),
+                            color = Color.White.copy(alpha = 0.7f),
+                            fontSize = 12.sp,
+                            lineHeight = 16.sp,
+                        )
+                    }
                 }
             }
         }

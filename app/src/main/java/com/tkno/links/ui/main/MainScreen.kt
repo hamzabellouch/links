@@ -24,13 +24,17 @@ enum class Tab {
 
 @Composable
 fun MainScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToUpdate: Boolean = false,
+    triggerUpdate: Boolean = false,
+    onNavigateToUpdateConsumed: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val prefs = remember { context.getSharedPreferences("links_prefs", Context.MODE_PRIVATE) }
     var isAutoUpdateEnabled by remember { mutableStateOf(prefs.getBoolean("auto_update_enabled", true)) }
     var hideLabels by remember { mutableStateOf(prefs.getBoolean("hide_navigation_labels", false)) }
     var useClassicTaskbar by remember { mutableStateOf(prefs.getBoolean("use_classic_taskbar", false)) }
+    var animateIndicator by remember { mutableStateOf(prefs.getBoolean("animate_taskbar_indicator", true)) }
 
     DisposableEffect(prefs) {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
@@ -38,6 +42,7 @@ fun MainScreen(
                 "auto_update_enabled" -> isAutoUpdateEnabled = p.getBoolean("auto_update_enabled", true)
                 "hide_navigation_labels" -> hideLabels = p.getBoolean("hide_navigation_labels", false)
                 "use_classic_taskbar" -> useClassicTaskbar = p.getBoolean("use_classic_taskbar", false)
+                "animate_taskbar_indicator" -> animateIndicator = p.getBoolean("animate_taskbar_indicator", true)
             }
         }
         prefs.registerOnSharedPreferenceChangeListener(listener)
@@ -53,6 +58,12 @@ fun MainScreen(
     val defaultTab by remember { derivedStateOf { reorderableTabs.firstOrNull() ?: Tab.ShortUrl } }
     var currentTab by rememberSaveable { mutableStateOf(loadNavOrder(prefs).firstOrNull() ?: Tab.ShortUrl) }
     val saveableStateHolder = rememberSaveableStateHolder()
+
+    LaunchedEffect(navigateToUpdate) {
+        if (navigateToUpdate) {
+            currentTab = Tab.Menu
+        }
+    }
 
     BackHandler(enabled = currentTab != defaultTab) {
         currentTab = defaultTab
@@ -74,7 +85,8 @@ fun MainScreen(
                     selectedTab = currentTab,
                     onTabSelect = { currentTab = it },
                     reorderableTabs = reorderableTabs,
-                    hideLabels = hideLabels
+                    hideLabels = hideLabels,
+                    animateIndicator = animateIndicator
                 )
             }
         },
@@ -92,7 +104,11 @@ fun MainScreen(
                     Tab.ShortUrl -> ShortUrlScreen()
                     Tab.Security -> SecurityScreen()
                     Tab.QrCode -> QrCodeScreen()
-                    Tab.Menu -> MenuScreen()
+                    Tab.Menu -> MenuScreen(
+                        navigateToUpdate = navigateToUpdate,
+                        triggerUpdate = triggerUpdate,
+                        onNavigateToUpdateConsumed = onNavigateToUpdateConsumed
+                    )
                 }
             }
         }

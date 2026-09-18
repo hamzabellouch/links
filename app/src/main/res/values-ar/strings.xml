@@ -13,6 +13,7 @@
     <string name="readme_desc">التحقق من مستودع GitHub وملف README</string>
     <string name="readme" translatable="false">README</string>
     <string name="image">صورة</string>
+    <string name="pdf">PDF</string>
     <string name="credits">الشكر والتقدير</string>
     <string name="credits_desc">الحقوق والبرمجيات الحرة</string>
     <string name="display">العرض</string>
@@ -103,6 +104,8 @@
     <string name="generate_qr_for">إنشاء رمز QR لـ...</string>
     <string name="enter_text_or_url">أدخل النص أو رابط URL</string>
     <string name="enter_text_above_to_generate">أدخل النص أعلاه للإنشاء</string>
+    <string name="enter_text_above">أدخل النص أعلاه</string>
+    <string name="to_generate_qr_code">لإنشاء رمز QR</string>
     <string name="save_qr_code">حفظ رمز QR</string>
     <string name="url_placeholder">http://example.com</string>
     <string name="contact_developer">الاتصال بالمطور</string>
@@ -149,7 +152,7 @@
     <string name="undetected">غير مكتشف</string>
     <string name="detection_score">نسبة الكشف</string>
     <string name="community_score">السمعة</string>
-    <string name="security_scan">الأمان</string>
+    <string name="security_scan">فحص الرابط</string>
     <string name="security_url_placeholder">http://example.com</string>
     <string name="interface_interaction">الواجهة والتفاعل</string>
     <string name="interface_interaction_desc">التنقل والإيماءات وسلوك الواجهة</string>
@@ -159,4 +162,17 @@
     <string name="hide_navigation_labels_desc">إظهار الأيقونات فقط بدون نصوص في شريط المهام</string>
     <string name="use_classic_taskbar">استخدام شريط المهام الكلاسيكي</string>
     <string name="use_classic_taskbar_desc">الرجوع إلى نمط شريط التنقل الكلاسيكي السابق</string>
+    <string name="animate_taskbar_indicator">أنيميشن مؤشر شريط المهام</string>
+    <string name="animate_taskbar_indicator_desc">تحريك الهالة بسلاسة عند التنقل بين التبويبات</string>
+    <string name="update_notification_channel_name">تحديثات التطبيق</string>
+    <string name="update_notification_channel_desc">إشعارات حول توفر إصدارات وتحديثات جديدة للتطبيق</string>
+    <string name="update_available_title">يتوفر تحديث جديد: %s</string>
+    <string name="update_available_desc">يتوفر إصدار جديد من تطبيق Links. اضغط هنا للتنزيل والتثبيت.</string>
+    <string name="auto_install_update">تثبيت التحديث تلقائياً</string>
+    <string name="install_permission_granted">تم منح إذن التثبيت بنجاح</string>
+    <string name="open_in_files">فتح في الملفات</string>
+    <string name="apk_saved_to_files">تم تنزيل التحديث. افتح تطبيق الملفات لتثبيته.</string>
+    <string name="downloading_update_notification">جاري تنزيل التحديث: %s</string>
+    <string name="update_download_completed_title">اكتمل تنزيل التحديث: %s</string>
+    <string name="update_download_completed_desc">تم الانتهاء من التحميل، اذهب إلى الملفات لتحديث التطبيق.</string>
 </resources>

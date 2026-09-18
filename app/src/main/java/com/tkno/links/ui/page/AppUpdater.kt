@@ -3,77 +3,68 @@ package com.tkno.links.ui.page
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import com.tkno.links.util.UpdateNotificationHelper
 import com.tkno.links.util.UpdateUtil
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
  * Background composable that checks for updates on launch (if auto-update is enabled)
- * and shows an [UpdateDialogImpl] when a new version is found.
+ * and sends a system notification when a new version is found.
  */
 @Composable
 fun AppUpdater(isAutoUpdateEnabled: Boolean) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     val prefs = remember { context.getSharedPreferences("links_prefs", Context.MODE_PRIVATE) }
     val updateChannel = prefs.getInt("update_channel", 1) // 1: Preview, 0: Stable
     val includePrerelease = updateChannel == 1
 
-    var showUpdateDialog by rememberSaveable { mutableStateOf(false) }
-    var currentDownloadStatus by remember {
-        mutableStateOf<UpdateUtil.DownloadStatus>(UpdateUtil.DownloadStatus.NotYet)
-    }
-    var updateJob by remember { mutableStateOf<Job?>(null) }
-    var release by remember { mutableStateOf(UpdateUtil.Release()) }
-
     LaunchedEffect(isAutoUpdateEnabled, updateChannel) {
         if (!isAutoUpdateEnabled) return@LaunchedEffect
         withContext(Dispatchers.IO) {
             runCatching {
-                UpdateUtil.checkForUpdate(context, includePrerelease = includePrerelease)?.let { foundRelease ->
-                    release = foundRelease
-                    showUpdateDialog = true
+                val foundRelease = UpdateUtil.checkForUpdate(context, includePrerelease = includePrerelease)
+                if (foundRelease != null) {
+                    val releaseTag = foundRelease.tagName ?: foundRelease.name ?: ""
+                    val lastDownloadedTag = prefs.getString("last_downloaded_update_tag", null)
+
+                    if (releaseTag.isNotEmpty() && releaseTag == lastDownloadedTag) {
+                        return@runCatching
+                    }
+
+                    UpdateNotificationHelper.createNotificationChannel(context)
+                    var lastNotifiedPercent = -1
+
+                    UpdateUtil.downloadApk(context, foundRelease).collect { status ->
+                        when (status) {
+                            is UpdateUtil.DownloadStatus.Progress -> {
+                                if (status.percent - lastNotifiedPercent >= 5 || status.percent == 0 || status.percent == 100) {
+                                    lastNotifiedPercent = status.percent
+                                    UpdateNotificationHelper.showDownloadProgressNotification(
+                                        context,
+                                        foundRelease,
+                                        status.percent
+                                    )
+                                }
+                            }
+                            is UpdateUtil.DownloadStatus.Finished -> {
+                                if (releaseTag.isNotEmpty()) {
+                                    prefs.edit().putString("last_downloaded_update_tag", releaseTag).apply()
+                                }
+                                UpdateNotificationHelper.showDownloadCompletedNotification(
+                                    context,
+                                    foundRelease
+                                )
+                            }
+                            else -> {}
+                        }
+                    }
                 }
             }.onFailure { it.printStackTrace() }
         }
     }
-
-    if (showUpdateDialog) {
-        UpdateDialogImpl(
-            onDismissRequest = {
-                showUpdateDialog = false
-                updateJob?.cancel()
-            },
-            title = release.name ?: release.tagName ?: "New Update",
-            releaseNote = release.body ?: "",
-            downloadStatus = currentDownloadStatus,
-            onConfirmUpdate = {
-                updateJob = scope.launch(Dispatchers.IO) {
-                    runCatching {
-                        UpdateUtil.downloadApk(context, release).collect { status ->
-                            currentDownloadStatus = status
-                            if (status is UpdateUtil.DownloadStatus.Finished) {
-                                withContext(Dispatchers.Main) {
-                                    UpdateUtil.installLatestApk(context)
-                                }
-                            }
-                        }
-                    }.onFailure {
-                        it.printStackTrace()
-                        currentDownloadStatus = UpdateUtil.DownloadStatus.NotYet
-                    }
-                }
-            },
-        )
-    }
 }
+

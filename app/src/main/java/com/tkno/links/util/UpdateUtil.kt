@@ -114,6 +114,51 @@ object UpdateUtil {
         }.onFailure { Log.e(TAG, "Failed to launch package installer", it) }
     }
 
+    fun openApkLocation(context: Context, release: Release) {
+        val prefs = context.getSharedPreferences("links_prefs", Context.MODE_PRIVATE)
+        val customUriString = prefs.getString("app_update_directory_uri", null)
+
+        if (!customUriString.isNullOrBlank()) {
+            val openedCustom = runCatching {
+                val uri = Uri.parse(customUriString)
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    setDataAndType(uri, "vnd.android.document/directory")
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                context.startActivity(intent)
+                true
+            }.getOrDefault(false)
+            if (openedCustom) return
+        }
+
+        val openedDownloads = runCatching {
+            val intent = Intent(android.app.DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+            true
+        }.getOrDefault(false)
+        if (openedDownloads) return
+
+        runCatching {
+            val downloadDir = android.os.Environment.getExternalStoragePublicDirectory(
+                android.os.Environment.DIRECTORY_DOWNLOADS
+            )
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(Uri.fromFile(downloadDir), "*/*")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+        }.onFailure {
+            android.widget.Toast.makeText(
+                context,
+                context.getString(com.tkno.links.R.string.apk_saved_to_files),
+                android.widget.Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
     suspend fun downloadApk(context: Context, release: Release): Flow<DownloadStatus> =
         withContext(Dispatchers.IO) {
             val saveFile = context.getLatestApk()
@@ -144,7 +189,9 @@ object UpdateUtil {
                     response.close()
                     return@withContext emptyFlow()
                 }
-                return@withContext responseBody.downloadFileWithProgress(saveFile)
+                return@withContext responseBody.downloadFileWithProgress(saveFile) {
+                    copyApkToUserDirectory(context, saveFile, release)
+                }
             } catch (e: Exception) {
                 if (e is kotlinx.coroutines.CancellationException) throw e
                 Log.e(TAG, "Download error", e)
@@ -152,7 +199,45 @@ object UpdateUtil {
             emptyFlow()
         }
 
-    private fun ResponseBody.downloadFileWithProgress(saveFile: File): Flow<DownloadStatus> =
+    private fun copyApkToUserDirectory(context: Context, sourceFile: File, release: Release) {
+        val prefs = context.getSharedPreferences("links_prefs", Context.MODE_PRIVATE)
+        val customUriString = prefs.getString("app_update_directory_uri", null)
+        val releaseTag = release.tagName ?: release.name ?: "update"
+        val apkFileName = "Links-$releaseTag.apk"
+
+        if (!customUriString.isNullOrBlank()) {
+            runCatching {
+                val treeUri = Uri.parse(customUriString)
+                val docDir = androidx.documentfile.provider.DocumentFile.fromTreeUri(context, treeUri)
+                if (docDir != null && docDir.canWrite()) {
+                    docDir.findFile(apkFileName)?.delete()
+                    val targetFile = docDir.createFile("application/vnd.android.package-archive", apkFileName)
+                    if (targetFile != null) {
+                        context.contentResolver.openOutputStream(targetFile.uri)?.use { outStream ->
+                            sourceFile.inputStream().use { inStream ->
+                                inStream.copyTo(outStream)
+                            }
+                        }
+                    }
+                }
+            }.onFailure { Log.e(TAG, "Failed to copy APK to custom SAF directory", it) }
+        } else {
+            runCatching {
+                val publicDownloads = android.os.Environment.getExternalStoragePublicDirectory(
+                    android.os.Environment.DIRECTORY_DOWNLOADS
+                )
+                if (publicDownloads.exists() && publicDownloads.canWrite()) {
+                    val targetFile = File(publicDownloads, apkFileName)
+                    sourceFile.copyTo(targetFile, overwrite = true)
+                }
+            }.onFailure { Log.e(TAG, "Failed to copy APK to public Download directory", it) }
+        }
+    }
+
+    private fun ResponseBody.downloadFileWithProgress(
+        saveFile: File,
+        onSuccess: () -> Unit = {}
+    ): Flow<DownloadStatus> =
         flow {
             emit(DownloadStatus.Progress(0))
             var deleteFile = true
@@ -180,7 +265,10 @@ object UpdateUtil {
                                     throw Exception("missing bytes")
                                 totalBytes > 0 && progressBytes > totalBytes ->
                                     throw Exception("too many bytes")
-                                else -> deleteFile = false
+                                else -> {
+                                    deleteFile = false
+                                    onSuccess()
+                                }
                             }
                         }
                     }

@@ -17,15 +17,21 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.InstallMobile
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.NotificationsActive
 import androidx.compose.material.icons.outlined.NotificationsOff
 import androidx.compose.material.icons.outlined.Update
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -80,24 +86,64 @@ fun UpdatePage(onNavigateBack: () -> Unit, triggerUpdate: Boolean = false) {
     var updateChannel by remember { mutableStateOf(prefs.getInt("update_channel", 1)) } // 1: PRE_RELEASE
     var bellEnabled by remember { mutableStateOf(prefs.getBoolean("update_bell_enabled", true)) }
 
+    val defaultDownloadPath = remember {
+        android.os.Environment.getExternalStoragePublicDirectory(
+            android.os.Environment.DIRECTORY_DOWNLOADS
+        ).absolutePath
+    }
+
     var customDir by remember {
-        mutableStateOf(
-            prefs.getString(
-                "app_update_directory",
-                android.os.Environment.getExternalStoragePublicDirectory(
-                    android.os.Environment.DIRECTORY_DOWNLOADS
-                ).absolutePath
-            ) ?: ""
-        )
+        mutableStateOf(prefs.getString("app_update_directory", defaultDownloadPath) ?: defaultDownloadPath)
     }
 
     val folderPickerLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocumentTree()) { uri ->
             uri?.let {
-                val path = uri.path ?: ""
-                prefs.edit().putString("app_update_directory", path).apply()
-                customDir = path
-                android.widget.Toast.makeText(context, "Update directory set to: $path", android.widget.Toast.LENGTH_SHORT).show()
+                val takeFlags = android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                    android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                runCatching {
+                    context.contentResolver.takePersistableUriPermission(uri, takeFlags)
+                }
+                val docDir = androidx.documentfile.provider.DocumentFile.fromTreeUri(context, uri)
+                val folderName = docDir?.name ?: uri.lastPathSegment ?: uri.toString()
+                val savedPath = uri.toString()
+
+                prefs.edit()
+                    .putString("app_update_directory_uri", savedPath)
+                    .putString("app_update_directory", folderName)
+                    .apply()
+
+                customDir = folderName
+                android.widget.Toast.makeText(context, "Update directory: $folderName", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    val notificationPermissionLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { _ -> }
+
+    val hasInstallPermission = remember {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.packageManager.canRequestPackageInstalls()
+        } else true
+    }
+
+    var autoInstallEnabled by remember {
+        mutableStateOf(prefs.getBoolean("auto_install_apk", true) && hasInstallPermission)
+    }
+
+    val installPermissionLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
+            val isGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.packageManager.canRequestPackageInstalls()
+            } else true
+            autoInstallEnabled = isGranted
+            prefs.edit().putBoolean("auto_install_apk", isGranted).apply()
+            if (isGranted) {
+                android.widget.Toast.makeText(
+                    context,
+                    context.getString(R.string.install_permission_granted),
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -140,13 +186,27 @@ fun UpdatePage(onNavigateBack: () -> Unit, triggerUpdate: Boolean = false) {
                 navigationIcon = { BackButton { onNavigateBack() } },
                 windowInsets = WindowInsets(0.dp),
                 actions = {
-                    IconButton(onClick = {
-                        bellEnabled = !bellEnabled
-                        prefs.edit().putBoolean("update_bell_enabled", bellEnabled).apply()
-                    }) {
+                    IconButton(
+                        enabled = !autoUpdate,
+                        onClick = {
+                            val newBellState = !bellEnabled
+                            bellEnabled = newBellState
+                            prefs.edit().putBoolean("update_bell_enabled", newBellState).apply()
+                            if (newBellState && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                                if (androidx.core.content.ContextCompat.checkSelfPermission(
+                                        context,
+                                        android.Manifest.permission.POST_NOTIFICATIONS
+                                    ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+                                ) {
+                                    notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                                }
+                            }
+                        }
+                    ) {
                         Icon(
-                            imageVector = if (bellEnabled) Icons.Outlined.NotificationsActive else Icons.Outlined.NotificationsOff,
+                            imageVector = if (autoUpdate || bellEnabled) Icons.Outlined.NotificationsActive else Icons.Outlined.NotificationsOff,
                             contentDescription = "Toggle Update Notifications",
+                            modifier = Modifier.alpha(if (autoUpdate) 0.38f else 1f),
                         )
                     }
                     Box {
@@ -160,6 +220,38 @@ fun UpdatePage(onNavigateBack: () -> Unit, triggerUpdate: Boolean = false) {
                             expanded = menuExpanded,
                             onDismissRequest = { menuExpanded = false },
                         ) {
+                            DropdownMenuItem(
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.InstallMobile,
+                                        contentDescription = null,
+                                    )
+                                },
+                                trailingIcon = {
+                                    Checkbox(
+                                        checked = autoInstallEnabled,
+                                        onCheckedChange = null,
+                                    )
+                                },
+                                text = { Text(stringResource(id = R.string.auto_install_update)) },
+                                onClick = {
+                                    if (!autoInstallEnabled) {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !context.packageManager.canRequestPackageInstalls()) {
+                                            val intent = Intent(
+                                                Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                                                Uri.parse("package:${context.packageName}")
+                                            )
+                                            installPermissionLauncher.launch(intent)
+                                        } else {
+                                            autoInstallEnabled = true
+                                            prefs.edit().putBoolean("auto_install_apk", true).apply()
+                                        }
+                                    } else {
+                                        autoInstallEnabled = false
+                                        prefs.edit().putBoolean("auto_install_apk", false).apply()
+                                    }
+                                },
+                            )
                             DropdownMenuItem(
                                 leadingIcon = {
                                     Icon(

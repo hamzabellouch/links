@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.VpnKey
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,11 +48,50 @@ import androidx.compose.ui.unit.sp
 import com.tkno.links.util.VirusTotalScanner
 import kotlinx.coroutines.launch
 
+private val SecurityReportSaver = Saver<VirusTotalScanner.SecurityReport?, List<Any>>(
+    save = { report ->
+        report?.let {
+            listOf(
+                it.sourceUrl,
+                it.destinationUrl,
+                it.harmlessCount,
+                it.maliciousCount,
+                it.suspiciousCount,
+                it.undetectedCount,
+                it.timeoutCount,
+                it.reputation,
+                it.title ?: "",
+                it.categories,
+                it.safetyStatus.name
+            )
+        }
+    },
+    restore = { list ->
+        VirusTotalScanner.SecurityReport(
+            sourceUrl = list[0] as String,
+            destinationUrl = list[1] as String,
+            harmlessCount = list[2] as Int,
+            maliciousCount = list[3] as Int,
+            suspiciousCount = list[4] as Int,
+            undetectedCount = list[5] as Int,
+            timeoutCount = list[6] as Int,
+            reputation = list[7] as Int,
+            title = (list[8] as String).ifEmpty { null },
+            categories = (list[9] as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
+            safetyStatus = try {
+                VirusTotalScanner.SafetyStatus.valueOf(list[10] as String)
+            } catch (e: Exception) {
+                VirusTotalScanner.SafetyStatus.UNKNOWN
+            }
+        )
+    }
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SecurityScreen() {
     var urlInput by rememberSaveable { mutableStateOf("") }
-    var report by remember { mutableStateOf<VirusTotalScanner.SecurityReport?>(null) }
+    var report by rememberSaveable(stateSaver = SecurityReportSaver) { mutableStateOf<VirusTotalScanner.SecurityReport?>(null) }
     var errorMessage by rememberSaveable { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(false) }
 

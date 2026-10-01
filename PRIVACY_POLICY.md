@@ -1,6 +1,12 @@
 # Privacy Policy - Links
 
-Last Updated: August 11, 2026
+Last Updated: October 1, 2026
+
+
+### 0. Rule 0: Disclaimer on Modified Builds, External APKs & Unofficial Forks:
+
+- **Original Source Integrity:** This privacy policy, safety guarantees, and security features apply strictly and exclusively to the official, unmodified application binaries and source code distributed directly through this official repository ([hamzabellouch/links](https://github.com/hamzabellouch/links)) and its verified official releases.
+- **Zero Liability for Modified / External Builds:** We (the publisher and maintainer) assume **no responsibility or liability whatsoever** for any modified APKs, third-party forks, repackaged binaries, unofficial distribution channels, or altered projects not originating directly from this official repository. Any installation or use of modified, tampered, or third-party builds is entirely at your own risk, and the publisher assumes no responsibility for any consequences, damages, security compromises, or data breaches that may occur.
 
 
 ### 1. Executive Summary & Overview:
@@ -77,7 +83,13 @@ Email: hamzabellouchcontact@gmail.com
 
 
 # سياسة الخصوصية - Links
-آخر تحديث: ١١ أغسطس ٢٠٢٦
+آخر تحديث: ١ أكتوبر ٢٠٢٦
+
+### ٠. القاعدة رقم ٠: إخلاء المسؤولية عن التطبيقات المعدلة وحزم APK الخارجية والمشاريع المشتقة:
+
+* **سلامة المصدر الأصلي:** تنطبق سياسة الخصوصية، وضمانات الأمان، والميزات المذكورة في هذه الوثيقة حصرياً وصراحةً على الإصدارات الرسمية غير المعدلة من التطبيق والشفرة المصدرية المنشورة مباشرة عبر هذا المستودع الأصلي المعتمد ([hamzabellouch/links](https://github.com/hamzabellouch/links)) وصفحة إصداراته الرسمية فقط.
+* **عدم تحمل المسؤولية عن النسخ المعدلة أو الخارجية:** نحن (الناشر والمطور) **لا نتحمل أي مسؤولية قانونية أو أمنية أو تقنية** عن تثبيت أو استخدام أي تطبيقات معدلة، أو حزم APK خارجية، أو نسخ مُعاد تجميعها، أو مشاريع مشتقة ومعدلة لا تنتمي لهذا المستودع الأصلي. كل ما ينتج عن استخدام أو تثبيت نسخ خارجية أو معدلة (من فقدان بيانات، أو ثغرات أمنية، أو برمجيات خبيثة، أو أي أضرار ناجمة) يقع بالكامل على عاتق المستخدم وحده دون أدنى مسؤولية على الناشر.
+
 
 ### ١. الملخص التنفيذي والنظرة العامة:
 

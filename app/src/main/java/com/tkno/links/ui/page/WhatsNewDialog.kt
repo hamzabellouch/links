@@ -41,9 +41,9 @@ fun WhatsNewDialog(
 ) {
     val context = LocalContext.current
     val versionName = try {
-        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "0.0.3-beta"
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "0.0.4-beta"
     } catch (e: Exception) {
-        "0.0.3-beta"
+        "0.0.4-beta"
     }
 
     AlertDialog(

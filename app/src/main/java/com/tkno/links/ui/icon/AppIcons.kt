@@ -620,3 +620,224 @@ public val QrCodeIcon: ImageVector
 
 private var _qrCodeIcon: ImageVector? = null
 
+public val Report: ImageVector
+    get() {
+        if (_report != null) {
+            return _report!!
+        }
+        _report = ImageVector.Builder(
+            name = "report",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f
+        ).apply {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1f,
+                stroke = null,
+                strokeAlpha = 1f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Bevel,
+                strokeLineMiter = 1f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(12f, 17f)
+                quadToRelative(0.43f, 0f, 0.71f, -0.29f)
+                quadTo(13f, 16.43f, 13f, 16f)
+                reflectiveQuadTo(12.71f, 15.29f)
+                reflectiveQuadTo(12f, 15f)
+                reflectiveQuadToRelative(-0.71f, 0.29f)
+                reflectiveQuadTo(11f, 16f)
+                reflectiveQuadToRelative(0.29f, 0.71f)
+                reflectiveQuadTo(12f, 17f)
+                close()
+                moveTo(11f, 13f)
+                horizontalLineToRelative(2f)
+                verticalLineTo(7f)
+                horizontalLineTo(11f)
+                verticalLineToRelative(6f)
+                close()
+                moveTo(8.25f, 21f)
+                lineTo(3f, 15.75f)
+                verticalLineTo(8.25f)
+                lineTo(8.25f, 3f)
+                horizontalLineToRelative(7.5f)
+                lineTo(21f, 8.25f)
+                verticalLineToRelative(7.5f)
+                lineTo(15.75f, 21f)
+                horizontalLineTo(8.25f)
+                close()
+                moveTo(9.1f, 19f)
+                horizontalLineToRelative(5.8f)
+                lineTo(19f, 14.9f)
+                verticalLineTo(9.1f)
+                lineTo(14.9f, 5f)
+                horizontalLineTo(9.1f)
+                lineTo(5f, 9.1f)
+                verticalLineToRelative(5.8f)
+                lineTo(9.1f, 19f)
+                close()
+                moveTo(12f, 12f)
+                close()
+            }
+        }.build()
+        return _report!!
+    }
+
+private var _report: ImageVector? = null
+
+public val Delete: ImageVector
+    get() {
+        if (_delete != null) {
+            return _delete!!
+        }
+        _delete = ImageVector.Builder(
+            name = "delete",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f,
+        ).apply {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1f,
+                stroke = null,
+                strokeAlpha = 1f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Bevel,
+                strokeLineMiter = 1f,
+                pathFillType = PathFillType.NonZero,
+            ) {
+                moveTo(7f, 21f)
+                quadTo(6.18f, 21f, 5.59f, 20.41f)
+                reflectiveQuadTo(5f, 19f)
+                verticalLineTo(6f)
+                horizontalLineTo(4f)
+                verticalLineTo(4f)
+                horizontalLineTo(9f)
+                verticalLineTo(3f)
+                horizontalLineToRelative(6f)
+                verticalLineTo(4f)
+                horizontalLineToRelative(5f)
+                verticalLineTo(6f)
+                horizontalLineTo(19f)
+                verticalLineTo(19f)
+                quadToRelative(0f, 0.82f, -0.59f, 1.41f)
+                reflectiveQuadTo(17f, 21f)
+                horizontalLineTo(7f)
+                close()
+                moveTo(17f, 6f)
+                horizontalLineTo(7f)
+                verticalLineTo(19f)
+                horizontalLineTo(17f)
+                verticalLineTo(6f)
+                close()
+                moveTo(9f, 17f)
+                horizontalLineToRelative(2f)
+                verticalLineTo(8f)
+                horizontalLineTo(9f)
+                verticalLineToRelative(9f)
+                close()
+                moveToRelative(4f, 0f)
+                horizontalLineToRelative(2f)
+                verticalLineTo(8f)
+                horizontalLineTo(13f)
+                verticalLineToRelative(9f)
+                close()
+                moveTo(7f, 6f)
+                verticalLineTo(19f)
+                verticalLineTo(6f)
+                close()
+            }
+        }.build()
+        return _delete!!
+    }
+
+private var _delete: ImageVector? = null
+
+public val StarShine: ImageVector
+    get() {
+        if (_starShine != null) {
+            return _starShine!!
+        }
+        _starShine = ImageVector.Builder(
+            name = "star_shine",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f,
+        ).apply {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1f,
+                stroke = null,
+                strokeAlpha = 1f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Bevel,
+                strokeLineMiter = 1f,
+                pathFillType = PathFillType.NonZero,
+            ) {
+                moveTo(21.3f, 18.7f)
+                lineToRelative(-3f, -3f)
+                lineToRelative(1.4f, -1.4f)
+                lineToRelative(3f, 3f)
+                lineToRelative(-1.4f, 1.4f)
+                close()
+                moveTo(17.7f, 6.7f)
+                lineTo(16.3f, 5.3f)
+                lineToRelative(3f, -3f)
+                lineToRelative(1.4f, 1.4f)
+                lineToRelative(-3f, 3f)
+                close()
+                moveTo(6.3f, 6.7f)
+                lineToRelative(-3f, -3f)
+                lineTo(4.7f, 2.3f)
+                lineToRelative(3f, 3f)
+                lineTo(6.3f, 6.7f)
+                close()
+                moveToRelative(-3.6f, 12f)
+                lineTo(1.3f, 17.3f)
+                lineToRelative(3f, -3f)
+                lineToRelative(1.4f, 1.4f)
+                lineToRelative(-3f, 3f)
+                close()
+                moveTo(8.85f, 16.83f)
+                lineTo(12f, 14.93f)
+                lineToRelative(3.15f, 1.93f)
+                lineToRelative(-0.82f, -3.6f)
+                lineToRelative(2.78f, -2.4f)
+                lineTo(13.45f, 10.52f)
+                lineTo(12f, 7.13f)
+                lineTo(10.55f, 10.5f)
+                lineTo(6.9f, 10.83f)
+                lineToRelative(2.78f, 2.43f)
+                lineTo(8.85f, 16.83f)
+                close()
+                moveTo(5.83f, 21f)
+                lineTo(7.45f, 13.98f)
+                lineTo(2f, 9.25f)
+                lineTo(9.2f, 8.63f)
+                lineTo(12f, 2f)
+                lineToRelative(2.8f, 6.63f)
+                lineTo(22f, 9.25f)
+                lineToRelative(-5.45f, 4.72f)
+                lineTo(18.18f, 21f)
+                lineTo(12f, 17.27f)
+                lineTo(5.83f, 21f)
+                close()
+                moveTo(12f, 11.98f)
+                close()
+            }
+        }.build()
+        return _starShine!!
+    }
+
+private var _starShine: ImageVector? = null
+
+public val star_shine: ImageVector
+    get() = StarShine
+

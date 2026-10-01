@@ -57,6 +57,7 @@ fun MainScreen(
     val reorderableTabs = remember { mutableStateListOf(*loadNavOrder(prefs).toTypedArray()) }
     val defaultTab by remember { derivedStateOf { reorderableTabs.firstOrNull() ?: Tab.ShortUrl } }
     var currentTab by rememberSaveable { mutableStateOf(loadNavOrder(prefs).firstOrNull() ?: Tab.ShortUrl) }
+    var pendingSecurityUrl by rememberSaveable { mutableStateOf<String?>(null) }
     val saveableStateHolder = rememberSaveableStateHolder()
 
     LaunchedEffect(navigateToUpdate) {
@@ -102,8 +103,16 @@ fun MainScreen(
             saveableStateHolder.SaveableStateProvider(currentTab) {
                 when (currentTab) {
                     Tab.ShortUrl -> ShortUrlScreen()
-                    Tab.Security -> SecurityScreen()
-                    Tab.QrCode -> QrCodeScreen()
+                    Tab.Security -> SecurityScreen(
+                        initialUrl = pendingSecurityUrl,
+                        onInitialUrlConsumed = { pendingSecurityUrl = null }
+                    )
+                    Tab.QrCode -> QrCodeScreen(
+                        onNavigateToSecurity = { url ->
+                            pendingSecurityUrl = url
+                            currentTab = Tab.Security
+                        }
+                    )
                     Tab.Menu -> MenuScreen(
                         navigateToUpdate = navigateToUpdate,
                         triggerUpdate = triggerUpdate,

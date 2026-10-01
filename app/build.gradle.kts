@@ -6,13 +6,13 @@ plugins {
 
 android {
     namespace = "com.tkno.links"
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig {
         applicationId = "com.tkno.links"
         minSdk = 24
-        targetSdk = 36
-        versionCode = 3
-        versionName = "0.0.3-beta"
+        targetSdk = 37
+        versionCode = 4
+        versionName = "0.0.4-beta"
     }
 
     buildTypes {
@@ -50,7 +50,7 @@ android {
 val androidComponents = project.extensions.getByType<com.android.build.api.variant.ApplicationAndroidComponentsExtension>()
 androidComponents.onVariants { variant ->
     variant.outputs.forEach { output ->
-        (output as? com.android.build.api.variant.impl.VariantOutputImpl)?.outputFileName?.set("Links-v0.0.3-beta-${variant.name}.apk")
+        (output as? com.android.build.api.variant.impl.VariantOutputImpl)?.outputFileName?.set("Links-v0.0.4-beta-${variant.name}.apk")
     }
 }
 

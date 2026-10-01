@@ -89,7 +89,10 @@ private val SecurityReportSaver = Saver<VirusTotalScanner.SecurityReport?, List<
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SecurityScreen() {
+fun SecurityScreen(
+    initialUrl: String? = null,
+    onInitialUrlConsumed: () -> Unit = {}
+) {
     var urlInput by rememberSaveable { mutableStateOf("") }
     var report by rememberSaveable(stateSaver = SecurityReportSaver) { mutableStateOf<VirusTotalScanner.SecurityReport?>(null) }
     var errorMessage by rememberSaveable { mutableStateOf<String?>(null) }
@@ -114,8 +117,9 @@ fun SecurityScreen() {
 
     val isResolved = report != null
 
-    fun handleScan() {
-        val trimmedInput = urlInput.trim()
+    fun handleScan(overrideUrl: String? = null) {
+        val rawInput = overrideUrl ?: urlInput
+        val trimmedInput = rawInput.trim()
         if (trimmedInput.isEmpty()) {
             errorMessage = context.getString(R.string.enter_url_error)
             return
@@ -132,6 +136,7 @@ fun SecurityScreen() {
             return
         }
 
+        urlInput = trimmedInput
         errorMessage = null
         keyboardController?.hide()
         focusManager.clearFocus()
@@ -158,6 +163,15 @@ fun SecurityScreen() {
             } finally {
                 isLoading = false
             }
+        }
+    }
+
+    LaunchedEffect(initialUrl) {
+        if (!initialUrl.isNullOrBlank()) {
+            urlInput = initialUrl
+            report = null
+            handleScan(initialUrl)
+            onInitialUrlConsumed()
         }
     }
 
@@ -446,8 +460,8 @@ private fun SecurityVerdictCard(
             VerdictVisuals(
                 backgroundColor = color.copy(alpha = 0.08f),
                 contentColor = color,
-                title = "...",
-                description = "..."
+                title = stringResource(R.string.security_no_url_scanned),
+                description = stringResource(R.string.security_no_url_scanned_desc)
             )
         }
         // الحالة 2: روابط خبيثة (Malicious)

@@ -39,7 +39,6 @@ Links UI & Features:
     <img src="https://github.com/hamzabellouch/links/blob/main/Images/11.jpg" width="30%" />
     <img src="https://github.com/hamzabellouch/links/blob/main/Images/12.jpg" width="30%" />
     <img src="https://github.com/hamzabellouch/links/blob/main/Images/13.jpg" width="30%" />
-    <img src="https://github.com/hamzabellouch/links/blob/main/Images/14.jpg" width="30%" />
   </div>
 </div>
 

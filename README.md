@@ -12,9 +12,9 @@ Inspect link safety, resolve short URLs, scan & generate custom QR codes with au
 
 ## Overview
 
-**Links** is a modern, high-performance, and privacy-focused Android application designed to help users inspect link security, unshorten redirect URLs, scan QR codes, and generate custom styled QR codes.
+**Links** is a modern, high-performance, and privacy-focused Android application designed to help users inspect link security, unshorten redirect URLs, scan and decode QR codes from cameras, gallery images, and multi-page PDF files, and generate custom styled QR codes.
 
-Unlike traditional utility apps filled with ads and background trackers, Links operates **100% on-device** for scanning and generation without collecting or transmitting any personal data. It leverages native Android APIs alongside lightweight HTTP redirect inspection to inspect link destinations and protect users from hidden or malicious tracking URLs.
+Unlike traditional utility apps filled with ads and background trackers, Links operates **100% on-device** for scanning and generation without collecting or transmitting any personal data. It integrates lightweight HTTP redirect inspection alongside multi-engine **VirusTotal Threat Intelligence** to protect users from phishing, malware, and hidden redirect chains.
 
 Links is built following **Modern Android Development (MAD)** standards with Kotlin and Jetpack Compose to ensure maximum responsiveness, battery efficiency, and a clean Material Design 3 user interface with Dynamic Color support.
 
@@ -50,27 +50,58 @@ Links UI & Features:
 
 | Feature | Method / API Used | Performance & Speed | Privacy & Safety Level | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| **Link Safety & Redirect Resolution** | `LinkResolver` & `HttpURLConnection` / `OkHttp` | **Fast** (< 1 sec) | **Privacy Protected** | Unshortens redirect links and checks domain safety before navigating. |
-| **Real-Time QR Code Scanner** | `CameraX` & `ZXing Core` | **Ultra-Fast** | **100% On-Device** | Instant hardware-accelerated scanning for QR codes and web links. |
-| **Custom QR Code Generator** | `ZXing Core` & `Jetpack Compose` | **Instant** | **100% On-Device** | Generates custom-styled QR codes for text, URLs, and credentials with export options. |
-| **Scan & Generation History** | Local Storage & Jetpack State | **Instant** | **Strictly Isolated** | Keeps an organized local history of scanned and generated links without cloud sync. |
-| **Zero Telemetry / No Ads** | Pure Local Logic | **N/A** | **Complete Privacy** | No analytics SDKs, no external tracking, and no user data collection. |
+| **Multi-Engine URL Security & Threat Scanner** | `VirusTotalScanner` & VirusTotal API v3 | **Real-Time** (< 2 sec) | **Encrypted HTTPS** | Scans URLs against 70+ security engines to identify phishing, malware, and suspicious domains with gauge scores and engine breakdown stats. |
+| **Link Safety & Redirect Resolution** | `LinkResolver` & `HttpURLConnection` / `OkHttp` | **Fast** (< 1 sec) | **100% Client-Side** | Traces recursive HTTP/HTTPS 3xx redirect chains to reveal ultimate destinations behind masked or shortened links before navigating. |
+| **Real-Time Camera QR Code Scanner** | `CameraX` & `ZXing Core` | **Ultra-Fast** (60 FPS) | **100% On-Device** | Hardware-accelerated viewfinder with autofocus, zoom controls, torch switch, and smooth animated reticle. |
+| **Multi-Page PDF Batch QR Decoder** | `PdfQrDecoder` & Android `PdfRenderer` | **Rapid Batch Processing** | **100% On-Device** | Parses multi-page PDF documents page-by-page, extracting and aggregating all embedded QR codes with batch copy and export options. |
+| **Gallery & Image QR Code Extraction** | `BitmapFactory`, `ContentResolver` & `ZXing` | **Instant** (< 500 ms) | **100% On-Device** | Decodes QR codes directly from device photos and saved image files without requiring camera permissions. |
+| **Wi-Fi QR Automatic Parser & Quick Connect** | `WifiManager` & `WifiNetworkSuggestion` | **Instant** | **100% On-Device** | Automatically detects Wi-Fi QR formats, provides one-tap connection, password copying, and secure credential sharing. |
+| **Custom Styled QR Code Generator** | `QrGenerator`, `ZXing Core` & `Jetpack Compose` | **Instant** (< 100 ms) | **100% On-Device** | Generates high-res QR codes for text, URLs, and Wi-Fi credentials with customizable colors, gallery export (`MediaStore`), and direct share intents. |
+| **History Management & Data Portability** | Isolated Local Storage & Jetpack State | **Instant** | **Strictly Isolated** | Keeps organized scan records with search, favorites/bookmarking, multi-select batch deletion, and multi-format export/import (JSON, CSV, MD, TXT). |
+| **In-App Auto Updater & Changelog** | `UpdateUtil`, `GitHub Releases API` & `FileProvider` | **Background Streaming** | **Direct GitHub Fetch** | Checks GitHub Releases for new updates, downloads APKs with live progress notifications, and triggers seamless in-app upgrades. |
+| **Bilingual Support & RTL Design** | Android Locales Config & Jetpack Compose RTL | **Native** | **N/A** | Complete localization for Arabic and English with full Right-to-Left (RTL) layout adaptation and Material Design 3 theming. |
+| **Zero Telemetry / 100% Privacy** | Pure Local Logic & No Trackers | **N/A** | **Complete Privacy** | Zero analytics SDKs, zero advertisement libraries, and no background tracking or personal data collection. |
 
 
 
 ## 🛠 Tech Stack & Architecture
 
-Links follows clean code architecture principles for maintainability, high performance, and minimal resource usage:
+Links follows clean architecture principles for maintainability, battery efficiency, and minimal resource usage:
 
-* **Language & Concurrency:** `100% Kotlin`, `Coroutines`, & `StateFlow`
-* **UI Framework:** `Jetpack Compose` with `Material Design 3` & `Dynamic Color` (Material You)
-* **Architecture:** `Single Activity Architecture` (`MainActivity`)
-* **Core APIs & Libraries:**
-  - `CameraX` (`camera2`, `lifecycle`, `view`) for real-time camera viewfinder & scanner integration
-  - `ZXing Core` for high-speed QR code encoding, matrix parsing, and rendering
-  - `OkHttp` & `Kotlinx Serialization` for link redirect resolution and auto-update verification
-  - `Accompanist Permissions` for seamless runtime camera and notification permissions
-* **Optimization & Performance:** Asynchronous non-blocking IO dispatchers for background link inspection and instant UI feedback
+* **Core Architecture & Concurrency:**
+  - `Single Activity Architecture` (`MainActivity`) powered by modern declarative UI
+  - Concurrency & reactive state management via Kotlin `Coroutines`, `StateFlow`, and Compose `rememberSaveable` with custom state savers
+  - Separation of concerns between UI presentation, domain utility services, and local state managers
+
+* **Language & Build Tooling:**
+  - `100% Kotlin 2.4+` with Kotlin Compose Compiler Plugin
+  - `Android Gradle Plugin 9.4+` managed via Gradle Version Catalogs (`libs.versions.toml`)
+  - Target & Compile SDK: `Android 16 (API 37)` | Minimum SDK: `Android 7.0 (API 24)`
+
+* **UI Framework & Design System:**
+  - `Jetpack Compose` with `Material Design 3` (BOM `2026.09.00`)
+  - Dynamic Color theming (Material You) with adaptive Dark/Light mode support
+  - Custom SVG vector icons (`AppIcons`, `Coder`) and custom floating navigation (`FloatingBottomBar`)
+  - Full native RTL (Right-to-Left) mirroring and edge-to-edge system insets integration
+
+* **Vision, Barcode & Document Processing:**
+  - `AndroidX CameraX 1.6+` (`camera2`, `lifecycle`, `view`) for real-time camera viewfinder & frame analysis
+  - `ZXing Core 3.5.4` for high-throughput QR matrix generation, binarization (`HybridBinarizer`), and decoding
+  - Android `PdfRenderer` & `BitmapFactory` for hardware-accelerated PDF rasterization and batch barcode extraction
+
+* **Networking, Security & System Services:**
+  - `OkHttp 5.5+` for high-performance HTTP redirect resolution, VirusTotal REST queries, and APK streaming
+  - `VirusTotal API v3` integration for multi-engine URL security intelligence and threat categorization
+  - `Kotlinx Serialization JSON` for schema-safe, lightweight payload serialization
+  - Android `WifiManager` & `WifiNetworkSuggestion` for direct Wi-Fi network configuration
+  - Android `NotificationManager` for background download progress notifications
+  - AndroidX `FileProvider` (`REQUEST_INSTALL_PACKAGES`) for secure in-app APK installation
+  - `Accompanist Permissions` for declarative runtime permissions management (Camera, Notifications)
+
+* **Testing & Quality Assurance:**
+  - `JUnit 4` & `kotlinx-coroutines-test` for unit testing and state verification (`ScanHistoryManagerTest`)
+  - `AndroidX Test` (`Core`, `Runner`, `JUnit Ext`) and `Espresso Core`
+  - `Compose UI Test` (`ui-test-junit4`, `ui-test-manifest`) for UI and layout assertions
 
 
 

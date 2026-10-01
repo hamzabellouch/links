@@ -6,8 +6,8 @@ The following versions of Links are currently supported with security, privacy, 
 
 | Version       | Supported          |
 | ------------- | ------------------ |
-| + 1.0.0       | :white_check_mark: |
-| < 1.0.0       | :x:                |
+| + 0.0.4       | :white_check_mark: |
+| < 0.0.4       | :x:                |
 
 
 
@@ -24,7 +24,7 @@ Please make sure that:
 ### How to Report
 You can report vulnerabilities through:
 - GitHub Issues (for non-sensitive reports and general bug reports)
-- Direct private contact channels / email for sensitive vulnerabilities or security concerns
+- E-mail: hamzabellouchcontact@gmail.com / [Froms](https://docs.google.com/forms/d/e/1FAIpQLSf87zkBsPRiUX19qF42vekAwgV_bW2EWZZPEThTo8PFIOFc0w/viewform?usp=header) 
 
 When reporting, please include:
 - Device model and Android OS version

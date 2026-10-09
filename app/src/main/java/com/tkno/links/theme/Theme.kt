@@ -64,6 +64,7 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun LinksTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    isHighContrast: Boolean = false,
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit,
 ) {
@@ -77,7 +78,7 @@ fun LinksTheme(
             val brandSecondaryContainer = if (darkTheme) Color(0xFF203248) else Color(0xFFE8F0FE)
             val brandOnSecondaryContainer = if (darkTheme) Color(0xFFD2E3FC) else Color(0xFF001D36)
 
-            dynamicScheme.copy(
+            val baseScheme = dynamicScheme.copy(
                 primary = brandPrimary,
                 onPrimary = brandOnPrimary,
                 primaryContainer = brandPrimaryContainer,
@@ -87,8 +88,34 @@ fun LinksTheme(
                 secondaryContainer = brandSecondaryContainer,
                 onSecondaryContainer = brandOnSecondaryContainer
             )
+
+            if (darkTheme && isHighContrast) {
+                baseScheme.copy(
+                    background = Color.Black,
+                    surface = Color.Black,
+                    surfaceContainer = Color(0xFF121212),
+                    surfaceContainerLow = Color(0xFF0A0A0A),
+                    surfaceContainerHigh = Color(0xFF1A1A1A),
+                    surfaceContainerHighest = Color(0xFF222222),
+                )
+            } else {
+                baseScheme
+            }
         }
-        darkTheme -> DarkColorScheme
+        darkTheme -> {
+            if (isHighContrast) {
+                DarkColorScheme.copy(
+                    background = Color.Black,
+                    surface = Color.Black,
+                    surfaceContainer = Color(0xFF121212),
+                    surfaceContainerLow = Color(0xFF0A0A0A),
+                    surfaceContainerHigh = Color(0xFF1A1A1A),
+                    surfaceContainerHighest = Color(0xFF222222),
+                )
+            } else {
+                DarkColorScheme
+            }
+        }
         else -> LightColorScheme
     }
 

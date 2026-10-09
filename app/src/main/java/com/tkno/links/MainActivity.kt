@@ -20,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.tkno.links.theme.LinksTheme
 import com.tkno.links.ui.main.MainScreen
+import com.tkno.links.ui.onboarding.OnboardingScreen
+import androidx.compose.runtime.saveable.rememberSaveable
 
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -27,6 +29,10 @@ import androidx.compose.ui.unit.LayoutDirection
 import java.util.Locale
 
 import android.content.Intent
+import com.tkno.links.ui.common.LocalDarkTheme
+import com.tkno.links.util.DarkThemePreference
+import com.tkno.links.util.LanguageManager
+import com.tkno.links.util.PreferenceUtil
 import com.tkno.links.util.UpdateNotificationHelper
 
 class MainActivity : ComponentActivity() {
@@ -37,10 +43,7 @@ class MainActivity : ComponentActivity() {
     val prefs = newBase.getSharedPreferences("links_prefs", Context.MODE_PRIVATE)
     val appLanguage = prefs.getString("app_language", "system") ?: "system"
     if (appLanguage != "system") {
-      val locale = Locale.forLanguageTag(appLanguage)
-      val config = android.content.res.Configuration(newBase.resources.configuration)
-      config.setLocale(locale)
-      val localizedContext = newBase.createConfigurationContext(config)
+      val localizedContext = LanguageManager.wrapContext(newBase, appLanguage)
       super.attachBaseContext(localizedContext)
     } else {
       super.attachBaseContext(newBase)
@@ -65,6 +68,7 @@ class MainActivity : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    PreferenceUtil.init(this)
     UpdateNotificationHelper.createNotificationChannel(this)
     handleIntent(intent)
 
@@ -73,14 +77,20 @@ class MainActivity : ComponentActivity() {
       val context = LocalContext.current
       val prefs = remember { context.getSharedPreferences("links_prefs", Context.MODE_PRIVATE) }
 
-      var darkThemePref by remember { mutableIntStateOf(prefs.getInt("dark_theme", 0)) }
+      val hasCompletedOnboarding = remember { prefs.getBoolean("onboarding_completed", false) }
+      var showOnboarding by rememberSaveable { mutableStateOf(!hasCompletedOnboarding) }
+
+      var darkThemePref by remember { mutableIntStateOf(prefs.getInt("dark_theme", DarkThemePreference.FOLLOW_SYSTEM)) }
+      var isHighContrastPref by remember { mutableStateOf(prefs.getBoolean("high_contrast_dark_theme", false)) }
       var dynamicColorPref by remember { mutableStateOf(prefs.getBoolean("dynamic_color", true)) }
       var appLanguagePref by remember { mutableStateOf(prefs.getString("app_language", "system") ?: "system") }
 
       DisposableEffect(prefs) {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
           if (key == "dark_theme") {
-            darkThemePref = p.getInt("dark_theme", 0)
+            darkThemePref = p.getInt("dark_theme", DarkThemePreference.FOLLOW_SYSTEM)
+          } else if (key == "high_contrast_dark_theme") {
+            isHighContrastPref = p.getBoolean("high_contrast_dark_theme", false)
           } else if (key == "dynamic_color") {
             dynamicColorPref = p.getBoolean("dynamic_color", true)
           } else if (key == "app_language") {
@@ -94,40 +104,35 @@ class MainActivity : ComponentActivity() {
       }
 
       val localeContext = remember(appLanguagePref, context) {
-        if (appLanguagePref == "system") {
-          context
-        } else {
-          val locale = Locale.forLanguageTag(appLanguagePref)
-          val config = android.content.res.Configuration(context.resources.configuration)
-          config.setLocale(locale)
-          val localizedConfigContext = context.createConfigurationContext(config)
-          object : android.content.ContextWrapper(context) {
-            override fun getResources(): android.content.res.Resources {
-              return localizedConfigContext.resources
-            }
-            override fun getAssets(): android.content.res.AssetManager {
-              return localizedConfigContext.assets
-            }
-          }
-        }
+        LanguageManager.wrapContext(context, appLanguagePref)
       }
 
-      val isDark = when (darkThemePref) {
-        1 -> true
-        2 -> false
-        else -> isSystemInDarkTheme()
+      val darkThemePreference = remember(darkThemePref, isHighContrastPref) {
+        DarkThemePreference(darkThemePref, isHighContrastPref)
       }
+
+      val isDark = darkThemePreference.isDarkTheme()
 
       val currentLocale = remember(appLanguagePref) {
         if (appLanguagePref == "system") {
           androidx.core.os.ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.getDefault()
         } else {
-          Locale.forLanguageTag(appLanguagePref)
+          val custom = LanguageManager.loadCustomLanguage(context, appLanguagePref)
+          if (custom != null) {
+            Locale.forLanguageTag(custom.code)
+          } else {
+            Locale.forLanguageTag(appLanguagePref)
+          }
         }
       }
 
-      val isRtl = remember(currentLocale) {
-        androidx.core.text.TextUtilsCompat.getLayoutDirectionFromLocale(currentLocale) == android.view.View.LAYOUT_DIRECTION_RTL
+      val isRtl = remember(currentLocale, appLanguagePref) {
+        val custom = LanguageManager.loadCustomLanguage(context, appLanguagePref)
+        if (custom != null) {
+          custom.direction.equals("rtl", ignoreCase = true)
+        } else {
+          androidx.core.text.TextUtilsCompat.getLayoutDirectionFromLocale(currentLocale) == android.view.View.LAYOUT_DIRECTION_RTL
+        }
       }
 
       val layoutDirection = if (isRtl) LayoutDirection.Rtl else LayoutDirection.Ltr
@@ -149,21 +154,32 @@ class MainActivity : ComponentActivity() {
 
       CompositionLocalProvider(
         LocalContext provides localeContext,
-        LocalLayoutDirection provides layoutDirection
+        LocalLayoutDirection provides layoutDirection,
+        LocalDarkTheme provides darkThemePreference
       ) {
         LinksTheme(
           darkTheme = isDark,
+          isHighContrast = isHighContrastPref,
           dynamicColor = dynamicColorPref
         ) {
           Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            MainScreen(
-              navigateToUpdate = navigateToUpdateState.value,
-              triggerUpdate = triggerUpdateState.value,
-              onNavigateToUpdateConsumed = {
-                navigateToUpdateState.value = false
-                triggerUpdateState.value = false
-              }
-            )
+            if (showOnboarding) {
+              OnboardingScreen(
+                onFinished = {
+                  prefs.edit().putBoolean("onboarding_completed", true).apply()
+                  showOnboarding = false
+                }
+              )
+            } else {
+              MainScreen(
+                navigateToUpdate = navigateToUpdateState.value,
+                triggerUpdate = triggerUpdateState.value,
+                onNavigateToUpdateConsumed = {
+                  navigateToUpdateState.value = false
+                  triggerUpdateState.value = false
+                }
+              )
+            }
           }
         }
       }

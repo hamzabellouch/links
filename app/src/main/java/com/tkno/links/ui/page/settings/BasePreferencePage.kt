@@ -63,6 +63,13 @@ fun BasePreferencePage(
         containerColor = containerColor,
         contentColor = contentColor,
         contentWindowInsets = contentWindowInsets,
-        content = content,
+        content = { scaffoldPadding ->
+            content(
+                PaddingValues(
+                    top = scaffoldPadding.calculateTopPadding(),
+                    bottom = scaffoldPadding.calculateBottomPadding() + 104.dp
+                )
+            )
+        },
     )
 }

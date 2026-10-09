@@ -19,7 +19,7 @@ fun AppUpdater(isAutoUpdateEnabled: Boolean) {
     val context = LocalContext.current
 
     val prefs = remember { context.getSharedPreferences("links_prefs", Context.MODE_PRIVATE) }
-    val updateChannel = prefs.getInt("update_channel", 1) // 1: Preview, 0: Stable
+    val updateChannel = prefs.getInt("update_channel", 0) // 0: Stable, 1: Beta/Preview
     val includePrerelease = updateChannel == 1
 
     LaunchedEffect(isAutoUpdateEnabled, updateChannel) {

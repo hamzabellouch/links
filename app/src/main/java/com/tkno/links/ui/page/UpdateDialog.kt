@@ -46,7 +46,7 @@ fun UpdateDialogImpl(
 ) {
     val context = LocalContext.current
     val prefs = remember { context.getSharedPreferences("links_prefs", android.content.Context.MODE_PRIVATE) }
-    val autoInstall = prefs.getBoolean("auto_install_apk", true)
+    val autoInstall = prefs.getBoolean("auto_install_apk", false)
     val canInstall = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
         context.packageManager.canRequestPackageInstalls()
     } else true
@@ -196,7 +196,7 @@ fun UpdateDialog(
                         if (status is UpdateUtil.DownloadStatus.Finished) {
                             withContext(Dispatchers.Main) {
                                 val prefs = context.getSharedPreferences("links_prefs", android.content.Context.MODE_PRIVATE)
-                                val autoInstall = prefs.getBoolean("auto_install_apk", true)
+                                val autoInstall = prefs.getBoolean("auto_install_apk", false)
                                 val canInstall = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                                     context.packageManager.canRequestPackageInstalls()
                                 } else true

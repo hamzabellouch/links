@@ -82,8 +82,8 @@ fun UpdatePage(onNavigateBack: () -> Unit, triggerUpdate: Boolean = false) {
     val scope = rememberCoroutineScope()
     val prefs = remember { context.getSharedPreferences("links_prefs", android.content.Context.MODE_PRIVATE) }
 
-    var autoUpdate by remember { mutableStateOf(prefs.getBoolean("auto_update_enabled", true)) }
-    var updateChannel by remember { mutableStateOf(prefs.getInt("update_channel", 1)) } // 1: PRE_RELEASE
+    var autoUpdate by remember { mutableStateOf(prefs.getBoolean("auto_update_enabled", false)) }
+    var updateChannel by remember { mutableStateOf(prefs.getInt("update_channel", 0)) } // 0: STABLE, 1: PRE_RELEASE
     var bellEnabled by remember { mutableStateOf(prefs.getBoolean("update_bell_enabled", true)) }
 
     val defaultDownloadPath = remember {
@@ -128,7 +128,7 @@ fun UpdatePage(onNavigateBack: () -> Unit, triggerUpdate: Boolean = false) {
     }
 
     var autoInstallEnabled by remember {
-        mutableStateOf(prefs.getBoolean("auto_install_apk", true) && hasInstallPermission)
+        mutableStateOf(prefs.getBoolean("auto_install_apk", false) && hasInstallPermission)
     }
 
     val installPermissionLauncher =
@@ -294,12 +294,24 @@ fun UpdatePage(onNavigateBack: () -> Unit, triggerUpdate: Boolean = false) {
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 8.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
-                        // Stable (Currently unavailable)
+                        // Stable
                         Row(
-                            modifier = Modifier.weight(1f).alpha(0.38f).padding(vertical = 8.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable {
+                                    updateChannel = 0
+                                    prefs.edit().putInt("update_channel", 0).apply()
+                                }
+                                .padding(vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            RadioButton(selected = false, onClick = null, enabled = false)
+                            RadioButton(
+                                selected = updateChannel == 0,
+                                onClick = {
+                                    updateChannel = 0
+                                    prefs.edit().putInt("update_channel", 0).apply()
+                                },
+                            )
                             Spacer(modifier = Modifier.width(8.dp))
                             Column {
                                 Text(
@@ -308,7 +320,7 @@ fun UpdatePage(onNavigateBack: () -> Unit, triggerUpdate: Boolean = false) {
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )
                                 Text(
-                                    text = stringResource(id = R.string.currently_unavailable),
+                                    text = stringResource(id = R.string.official_release),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )

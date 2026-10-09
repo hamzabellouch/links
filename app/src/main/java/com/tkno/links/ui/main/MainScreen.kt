@@ -9,8 +9,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.tkno.links.*
 import com.tkno.links.ui.component.ClassicBottomBar
 import com.tkno.links.ui.component.FloatingBottomBar
@@ -31,7 +33,7 @@ fun MainScreen(
 ) {
     val context = LocalContext.current
     val prefs = remember { context.getSharedPreferences("links_prefs", Context.MODE_PRIVATE) }
-    var isAutoUpdateEnabled by remember { mutableStateOf(prefs.getBoolean("auto_update_enabled", true)) }
+    var isAutoUpdateEnabled by remember { mutableStateOf(prefs.getBoolean("auto_update_enabled", false)) }
     var hideLabels by remember { mutableStateOf(prefs.getBoolean("hide_navigation_labels", false)) }
     var useClassicTaskbar by remember { mutableStateOf(prefs.getBoolean("use_classic_taskbar", false)) }
     var animateIndicator by remember { mutableStateOf(prefs.getBoolean("animate_taskbar_indicator", true)) }
@@ -39,7 +41,7 @@ fun MainScreen(
     DisposableEffect(prefs) {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
             when (key) {
-                "auto_update_enabled" -> isAutoUpdateEnabled = p.getBoolean("auto_update_enabled", true)
+                "auto_update_enabled" -> isAutoUpdateEnabled = p.getBoolean("auto_update_enabled", false)
                 "hide_navigation_labels" -> hideLabels = p.getBoolean("hide_navigation_labels", false)
                 "use_classic_taskbar" -> useClassicTaskbar = p.getBoolean("use_classic_taskbar", false)
                 "animate_taskbar_indicator" -> animateIndicator = p.getBoolean("animate_taskbar_indicator", true)
@@ -81,14 +83,6 @@ fun MainScreen(
                     reorderableTabs = reorderableTabs,
                     hideLabels = hideLabels
                 )
-            } else {
-                FloatingBottomBar(
-                    selectedTab = currentTab,
-                    onTabSelect = { currentTab = it },
-                    reorderableTabs = reorderableTabs,
-                    hideLabels = hideLabels,
-                    animateIndicator = animateIndicator
-                )
             }
         },
         containerColor = appBackground,
@@ -98,7 +92,10 @@ fun MainScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(appBackground)
-                .padding(paddingValues)
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    bottom = if (useClassicTaskbar) paddingValues.calculateBottomPadding() else 0.dp
+                )
         ) {
             saveableStateHolder.SaveableStateProvider(currentTab) {
                 when (currentTab) {
@@ -119,6 +116,17 @@ fun MainScreen(
                         onNavigateToUpdateConsumed = onNavigateToUpdateConsumed
                     )
                 }
+            }
+
+            if (!useClassicTaskbar) {
+                FloatingBottomBar(
+                    selectedTab = currentTab,
+                    onTabSelect = { currentTab = it },
+                    reorderableTabs = reorderableTabs,
+                    hideLabels = hideLabels,
+                    animateIndicator = animateIndicator,
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                )
             }
         }
     }

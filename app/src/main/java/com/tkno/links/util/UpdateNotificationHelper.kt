@@ -42,7 +42,7 @@ object UpdateNotificationHelper {
     fun showUpdateNotification(context: Context, release: UpdateUtil.Release) {
         val prefs = context.getSharedPreferences("links_prefs", Context.MODE_PRIVATE)
 
-        val autoUpdate = prefs.getBoolean("auto_update_enabled", true)
+        val autoUpdate = prefs.getBoolean("auto_update_enabled", false)
         val bellEnabled = prefs.getBoolean("update_bell_enabled", true)
 
         if (!autoUpdate || !bellEnabled) {

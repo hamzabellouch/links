@@ -104,7 +104,8 @@ fun ShortUrlScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
-                .navigationBarsPadding(),
+                .navigationBarsPadding()
+                .padding(bottom = 96.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
@@ -349,7 +350,7 @@ fun ShortUrlScreen() {
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(bottom = 16.dp, end = 4.dp)
+                .padding(bottom = 96.dp, end = 4.dp)
         ) {
             Icon(
                 imageVector = Icons.Outlined.ContentPaste,

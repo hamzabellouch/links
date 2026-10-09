@@ -1,7 +1,6 @@
 package com.tkno.links
 
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -186,6 +185,7 @@ fun SecurityScreen(
                 .fillMaxSize()
                 .statusBarsPadding()
                 .navigationBarsPadding()
+                .padding(bottom = 96.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -424,7 +424,7 @@ fun SecurityScreen(
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(bottom = 16.dp, end = 4.dp)
+                .padding(bottom = 96.dp, end = 4.dp)
         ) {
             Icon(
                 imageVector = Icons.Outlined.ContentPaste,
@@ -509,7 +509,6 @@ private fun SecurityVerdictCard(
     Card(
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
-        border = BorderStroke(1.dp, contentColor.copy(alpha = 0.25f)),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -769,7 +768,6 @@ private fun StatBadge(
     Surface(
         shape = RoundedCornerShape(16.dp),
         color = accentColor.copy(alpha = 0.1f),
-        border = androidx.compose.foundation.BorderStroke(1.dp, accentColor.copy(alpha = 0.25f)),
         modifier = modifier
     ) {
         Column(

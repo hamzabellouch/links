@@ -130,30 +130,68 @@ fun PreferenceItem(
 fun PreferenceSingleChoiceItem(
     modifier: Modifier = Modifier,
     text: String,
+    description: String? = null,
+    icon: Any? = null,
     selected: Boolean,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
+    enabled: Boolean = true,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 8.dp, vertical = 14.dp),
     onClick: () -> Unit,
 ) {
     Surface(
         onClick = onClick,
+        enabled = enabled,
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             modifier = modifier.fillMaxWidth().padding(contentPadding),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Column(modifier = Modifier.weight(1f).padding(start = 8.dp)) {
+            when (icon) {
+                is ImageVector -> {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        modifier = Modifier.padding(start = 8.dp, end = 16.dp).size(24.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.applyOpacity(enabled),
+                    )
+                }
+
+                is Painter -> {
+                    Icon(
+                        painter = icon,
+                        contentDescription = null,
+                        modifier = Modifier.padding(start = 8.dp, end = 16.dp).size(24.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.applyOpacity(enabled),
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = if (icon == null) 8.dp else 0.dp, end = 8.dp)
+            ) {
                 Text(
                     text = text,
                     maxLines = 1,
                     style = PreferenceTitleVariant,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface.applyOpacity(enabled),
                     overflow = TextOverflow.Ellipsis,
                 )
+                if (!description.isNullOrEmpty()) {
+                    Text(
+                        text = description,
+                        maxLines = 2,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.applyOpacity(enabled),
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
             RadioButton(
                 selected = selected,
                 onClick = onClick,
+                enabled = enabled,
                 modifier = Modifier.padding().clearAndSetSemantics {},
             )
         }
@@ -270,6 +308,28 @@ fun PreferenceSwitch(
             )
         }
     }
+}
+
+@Composable
+fun PreferenceSwitchVariant(
+    modifier: Modifier = Modifier,
+    title: String,
+    description: String? = null,
+    icon: ImageVector? = null,
+    enabled: Boolean = true,
+    isChecked: Boolean = true,
+    thumbContent: (@Composable () -> Unit)? = rememberThumbContent(isChecked = isChecked),
+    onClick: () -> Unit = {},
+) {
+    PreferenceSwitch(
+        title = title,
+        description = description,
+        icon = icon,
+        enabled = enabled,
+        isChecked = isChecked,
+        thumbContent = thumbContent,
+        onClick = onClick,
+    )
 }
 
 @Composable

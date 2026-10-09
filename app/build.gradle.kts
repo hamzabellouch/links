@@ -11,8 +11,8 @@ android {
         applicationId = "com.tkno.links"
         minSdk = 24
         targetSdk = 37
-        versionCode = 4
-        versionName = "0.0.4-beta"
+        versionCode = 5
+        versionName = "0.0.5"
     }
 
     buildTypes {
@@ -50,7 +50,7 @@ android {
 val androidComponents = project.extensions.getByType<com.android.build.api.variant.ApplicationAndroidComponentsExtension>()
 androidComponents.onVariants { variant ->
     variant.outputs.forEach { output ->
-        (output as? com.android.build.api.variant.impl.VariantOutputImpl)?.outputFileName?.set("Links-v0.0.4-beta-${variant.name}.apk")
+        (output as? com.android.build.api.variant.impl.VariantOutputImpl)?.outputFileName?.set("Links-v0.0.5-${variant.name}.apk")
     }
 }
 

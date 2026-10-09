@@ -1516,9 +1516,9 @@ fun AboutPage(
     AppUpdater(isAutoUpdateEnabled = isAutoUpdateEnabled)
 
     val versionName = try {
-        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "0.0.4-beta"
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "0.0.5"
     } catch (e: Exception) {
-        "0.0.4-beta"
+        "0.0.5"
     }
     val info = "App version: $versionName\nPackage name: ${context.packageName}\nDevice: Android ${android.os.Build.VERSION.RELEASE} (API ${android.os.Build.VERSION.SDK_INT})"
     val uriHandler = LocalUriHandler.current

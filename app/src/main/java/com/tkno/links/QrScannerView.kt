@@ -3,6 +3,7 @@ package com.tkno.links
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.ScaleGestureDetector
 import android.view.ViewGroup
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -42,6 +43,7 @@ fun QrScannerView(
     val mainHandler = remember { Handler(Looper.getMainLooper()) }
 
     var cameraControl by remember { mutableStateOf<CameraControl?>(null) }
+    var cameraState by remember { mutableStateOf<Camera?>(null) }
     var cameraProviderState by remember { mutableStateOf<ProcessCameraProvider?>(null) }
     var currentBoundLensFacing by remember { mutableIntStateOf(-1) }
 
@@ -80,6 +82,8 @@ fun QrScannerView(
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+            cameraState = null
+            cameraControl = null
             cameraExecutor.shutdown()
         }
     }
@@ -102,20 +106,42 @@ fun QrScannerView(
                 }
             }
 
-            // Tap to focus listener
-            previewView.setOnTouchListener { view, event ->
-                if (event.action == android.view.MotionEvent.ACTION_DOWN) {
-                    val factory = previewView.meteringPointFactory
-                    val point = factory.createPoint(event.x, event.y)
-                    val action = FocusMeteringAction.Builder(point, FocusMeteringAction.FLAG_AF or FocusMeteringAction.FLAG_AE)
-                        .setAutoCancelDuration(3, java.util.concurrent.TimeUnit.SECONDS)
-                        .build()
-                    cameraControl?.startFocusAndMetering(action)
-                    view.performClick()
-                    true
-                } else {
-                    false
+            val scaleGestureDetector = ScaleGestureDetector(ctx, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                override fun onScale(detector: ScaleGestureDetector): Boolean {
+                    val camera = cameraState ?: return false
+                    val zoomState = camera.cameraInfo.zoomState.value ?: return false
+                    val minRatio = zoomState.minZoomRatio
+                    val maxRatio = zoomState.maxZoomRatio
+                    val currentRatio = zoomState.zoomRatio
+                    val targetRatio = (currentRatio * detector.scaleFactor).coerceIn(minRatio, maxRatio)
+                    cameraControl?.setZoomRatio(targetRatio)
+                    return true
                 }
+            })
+
+            var isMultiTouch = false
+
+            // Tap to focus and pinch-to-zoom listener
+            previewView.setOnTouchListener { view, event ->
+                if (event.pointerCount > 1) {
+                    isMultiTouch = true
+                }
+
+                scaleGestureDetector.onTouchEvent(event)
+
+                if (event.actionMasked == android.view.MotionEvent.ACTION_UP) {
+                    if (!isMultiTouch && !scaleGestureDetector.isInProgress && event.eventTime - event.downTime < 300) {
+                        val factory = previewView.meteringPointFactory
+                        val point = factory.createPoint(event.x, event.y)
+                        val action = FocusMeteringAction.Builder(point, FocusMeteringAction.FLAG_AF or FocusMeteringAction.FLAG_AE)
+                            .setAutoCancelDuration(3, java.util.concurrent.TimeUnit.SECONDS)
+                            .build()
+                        cameraControl?.startFocusAndMetering(action)
+                        view.performClick()
+                    }
+                    isMultiTouch = false
+                }
+                true
             }
 
             val cameraProviderFuture = ProcessCameraProvider.getInstance(ctx)
@@ -159,6 +185,7 @@ fun QrScannerView(
                         preview,
                         imageAnalysis
                     )
+                    cameraState = camera
                     cameraControl = camera.cameraControl
                     cameraControl?.setLinearZoom(zoomRatio)
                     currentBoundLensFacing = cameraLensFacing
@@ -210,6 +237,7 @@ fun QrScannerView(
                         preview,
                         imageAnalysis
                     )
+                    cameraState = camera
                     cameraControl = camera.cameraControl
                     cameraControl?.setLinearZoom(zoomRatio)
                     currentBoundLensFacing = cameraLensFacing

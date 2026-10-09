@@ -1260,7 +1260,7 @@ fun ScanHistoryPage(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(bottom = 16.dp)
+                    contentPadding = PaddingValues(bottom = 104.dp)
                 ) {
                     groupedItems.forEach { (date, itemsInGroup) ->
                         item(key = "header_$date") {
@@ -1626,11 +1626,33 @@ enum class QrMode {
 fun QrCodeScreen(
     onNavigateToSecurity: (String) -> Unit = {}
 ) {
+    val context = LocalContext.current
+    val prefs = remember { context.getSharedPreferences("links_prefs", android.content.Context.MODE_PRIVATE) }
+    var showCostumeTab by remember { mutableStateOf(prefs.getBoolean("show_costume_tab", true)) }
+
+    DisposableEffect(prefs) {
+        val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
+            if (key == "show_costume_tab") {
+                showCostumeTab = p.getBoolean("show_costume_tab", true)
+            }
+        }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        onDispose {
+            prefs.unregisterOnSharedPreferenceChangeListener(listener)
+        }
+    }
+
     var currentMode by remember { mutableStateOf(QrMode.Scan) }
+
+    LaunchedEffect(showCostumeTab) {
+        if (!showCostumeTab && currentMode == QrMode.Costume) {
+            currentMode = QrMode.Scan
+        }
+    }
+
     var selectedHistoryItem by remember { mutableStateOf<String?>(null) }
     var isHistoryPageOpen by remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
     var historyItems by remember { mutableStateOf(ScanHistoryManager.getHistoryItems(context)) }
 
     val softBlue = MaterialTheme.colorScheme.primary
@@ -1664,7 +1686,8 @@ fun QrCodeScreen(
                     .fillMaxSize()
                     .padding(horizontal = 20.dp)
                     .statusBarsPadding()
-                    .navigationBarsPadding(),
+                    .navigationBarsPadding()
+                    .padding(bottom = 96.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
@@ -1759,6 +1782,7 @@ fun QrCodeScreen(
                 QrModeSelectionBar(
                     selectedMode = currentMode,
                     onSelect = { currentMode = it },
+                    showCostumeTab = showCostumeTab,
                     modifier = Modifier.padding(vertical = 12.dp)
                 )
             }
@@ -1771,9 +1795,16 @@ fun QrCodeScreen(
 fun QrModeSelectionBar(
     selectedMode: QrMode,
     onSelect: (QrMode) -> Unit,
+    showCostumeTab: Boolean = true,
     modifier: Modifier = Modifier
 ) {
-    val modes = remember { listOf(QrMode.Scan, QrMode.Generate, QrMode.Costume) }
+    val modes = remember(showCostumeTab) {
+        if (showCostumeTab) {
+            listOf(QrMode.Scan, QrMode.Generate, QrMode.Costume)
+        } else {
+            listOf(QrMode.Scan, QrMode.Generate)
+        }
+    }
     val softBlue = MaterialTheme.colorScheme.primary
     val borderGrey = MaterialTheme.colorScheme.outlineVariant
     
@@ -1898,6 +1929,30 @@ fun FullScreenScannerModal(
     var zoomRatio by remember { mutableFloatStateOf(0f) }
     val softBlue = Color(0xFF8AB4F8)
     val context = LocalContext.current
+    val prefs = remember { context.getSharedPreferences("links_prefs", Context.MODE_PRIVATE) }
+    var showZoomSlider by remember {
+        mutableStateOf(
+            if (prefs.contains("show_zoom_slider")) {
+                prefs.getBoolean("show_zoom_slider", false)
+            } else if (prefs.contains("qr_pinch_zoom")) {
+                !prefs.getBoolean("qr_pinch_zoom", true)
+            } else {
+                false
+            }
+        )
+    }
+
+    DisposableEffect(prefs) {
+        val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
+            if (key == "show_zoom_slider") {
+                showZoomSlider = p.getBoolean("show_zoom_slider", false)
+            }
+        }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        onDispose {
+            prefs.unregisterOnSharedPreferenceChangeListener(listener)
+        }
+    }
 
     // Resolve the host Activity even when context is wrapped (e.g. inside a Dialog)
     val activity = remember(context) {
@@ -2206,54 +2261,56 @@ fun FullScreenScannerModal(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Zoom Control Pill Slider
-                Surface(
-                    shape = RoundedCornerShape(50),
-                    color = Color.Black.copy(alpha = 0.55f),
-                    modifier = Modifier
-                        .fillMaxWidth(0.85f)
-                ) {
-                    Row(
+                if (showZoomSlider) {
+                    Surface(
+                        shape = RoundedCornerShape(50),
+                        color = Color.Black.copy(alpha = 0.55f),
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 14.dp, vertical = 2.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                            .fillMaxWidth(0.85f)
                     ) {
-                        Icon(
-                            imageVector = Icons.Outlined.ZoomOut,
-                            contentDescription = "Zoom out",
-                            tint = Color.White.copy(alpha = 0.9f),
+                        Row(
                             modifier = Modifier
-                                .size(20.dp)
-                                .clickable { zoomRatio = 0f }
-                        )
+                                .fillMaxWidth()
+                                .padding(horizontal = 14.dp, vertical = 2.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.ZoomOut,
+                                contentDescription = "Zoom out",
+                                tint = Color.White.copy(alpha = 0.9f),
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .clickable { zoomRatio = 0f }
+                            )
 
-                        Slider(
-                            value = zoomRatio,
-                            onValueChange = { zoomRatio = it },
-                            valueRange = 0f..1f,
-                            colors = SliderDefaults.colors(
-                                thumbColor = Color.White,
-                                activeTrackColor = softBlue,
-                                inactiveTrackColor = Color.White.copy(alpha = 0.3f)
-                            ),
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = 8.dp)
-                        )
+                            Slider(
+                                value = zoomRatio,
+                                onValueChange = { zoomRatio = it },
+                                valueRange = 0f..1f,
+                                colors = SliderDefaults.colors(
+                                    thumbColor = Color.White,
+                                    activeTrackColor = softBlue,
+                                    inactiveTrackColor = Color.White.copy(alpha = 0.3f)
+                                ),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(horizontal = 8.dp)
+                            )
 
-                        Icon(
-                            imageVector = Icons.Outlined.ZoomIn,
-                            contentDescription = "Zoom in",
-                            tint = Color.White.copy(alpha = 0.9f),
-                            modifier = Modifier
-                                .size(20.dp)
-                                .clickable { zoomRatio = 1f }
-                        )
+                            Icon(
+                                imageVector = Icons.Outlined.ZoomIn,
+                                contentDescription = "Zoom in",
+                                tint = Color.White.copy(alpha = 0.9f),
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .clickable { zoomRatio = 1f }
+                            )
+                        }
                     }
-                }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
 
                 // Bottom Footer ("Scanned by Links")
                 Row(
@@ -3145,7 +3202,6 @@ fun GenerateContent(
             modifier = Modifier
                 .size(260.dp)
                 .background(if (qrBitmap != null) Color.White else MaterialTheme.colorScheme.surfaceContainer, shape = RoundedCornerShape(16.dp))
-                .border(1.dp, borderGrey, shape = RoundedCornerShape(16.dp))
                 .padding(16.dp),
             contentAlignment = Alignment.Center,
         ) {

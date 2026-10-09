@@ -18,8 +18,14 @@
     <string name="display_settings">Dark theme, dynamic color, languages</string>
     <string name="dark_theme">Dark theme</string>
     <string name="follow_system">System</string>
+    <string name="follow_system_desc">Follow system dark theme settings</string>
     <string name="on">On</string>
+    <string name="dark_theme_on_desc">Always use dark theme</string>
     <string name="off">Off</string>
+    <string name="dark_theme_off_desc">Never use dark theme</string>
+    <string name="additional_settings">Additional settings</string>
+    <string name="high_contrast">High contrast dark theme</string>
+    <string name="high_contrast_desc">Use pure black background in dark theme</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
     <string name="unknown_error">Unknown error</string>
@@ -117,6 +123,7 @@
     <string name="downloaded_successfully">Downloaded successfully</string>
     <string name="installer_auto_open">The installer should open automatically.</string>
     <string name="stable">Stable</string>
+    <string name="official_release">Official release</string>
     <string name="currently_unavailable">Currently unavailable</string>
     <string name="beta">Beta</string>
     <string name="early_access">Get new features</string>
@@ -160,4 +167,10 @@
     <string name="deselect_all">Deselect all</string>
     <string name="delete_selected">Delete selected</string>
     <string name="items_deleted_successfully">%d item(s) deleted</string>
+
+    <!-- General Settings -->
+    <string name="show_costume_tab">Show Costume tab in QR Code</string>
+    <string name="show_costume_tab_desc">Display the Costume option in the QR Code mode selector</string>
+    <string name="show_zoom_slider">Show zoom slider</string>
+    <string name="show_zoom_slider_desc">Display the zoom slider capsule on the scanner screen</string>
 </resources>

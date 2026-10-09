@@ -20,8 +20,14 @@
     <string name="display_settings">Dark theme, dynamic color, languages</string>
     <string name="dark_theme">Dark theme</string>
     <string name="follow_system">System</string>
+    <string name="follow_system_desc">Follow system dark theme settings</string>
     <string name="on">On</string>
+    <string name="dark_theme_on_desc">Always use dark theme</string>
     <string name="off">Off</string>
+    <string name="dark_theme_off_desc">Never use dark theme</string>
+    <string name="additional_settings">Additional settings</string>
+    <string name="high_contrast">High contrast dark theme</string>
+    <string name="high_contrast_desc">Use pure black background in dark theme</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
     <string name="unknown_error">Unknown error</string>
@@ -131,6 +137,7 @@
     <string name="downloaded_successfully">Downloaded successfully</string>
     <string name="installer_auto_open">The installer should open automatically.</string>
     <string name="stable">Stable</string>
+    <string name="official_release">Official release</string>
     <string name="currently_unavailable">Currently unavailable</string>
     <string name="beta">Beta</string>
     <string name="early_access">Get new features</string>
@@ -224,4 +231,39 @@
     <string name="deselect_all">Deselect all</string>
     <string name="delete_selected">Delete selected</string>
     <string name="items_deleted_successfully">%d item(s) deleted</string>
+
+    <!-- Onboarding / Welcome Flow -->
+    <string name="links_brand" translatable="false">Links</string>
+    <string name="welcome_to_links">Welcome to\nLinks</string>
+    <string name="welcome_desc">Enjoy fast, private link scanning, URL inspection, and QR tools. Anytime, anywhere, across your devices.</string>
+    <string name="get_started">Get started</string>
+    <string name="onboarding_features_title">Scan &amp; verify\nin seconds</string>
+    <string name="onboarding_features_desc">Inspect URLs instantly, trace redirect chains, detect phishing, and scan QR codes with on-device privacy.</string>
+    <string name="skip">Skip</string>
+    <string name="continue_button">Continue</string>
+    <string name="onboarding_level_up_title">Level up your\nexperience</string>
+    <string name="onboarding_level_up_desc">Get real-time threat intelligence, customized QR tools, and zero-telemetry privacy straight on your device.</string>
+    <string name="not_now">Not now</string>
+    <string name="lets_go">Let\'s go!</string>
+
+    <!-- Language Packs -->
+    <string name="download_languages">Download languages</string>
+    <string name="download_languages_desc">Download community translations</string>
+    <string name="downloaded_languages">Downloaded languages</string>
+    <string name="built_in_languages">Languages</string>
+    <string name="languages">Languages</string>
+    <string name="no_downloaded_languages">No downloaded languages yet</string>
+    <string name="download_failed">Failed to download language</string>
+    <string name="language_downloaded">Language downloaded successfully</string>
+    <string name="language_deleted">Language deleted</string>
+    <string name="available_community_languages">Available community languages</string>
+    <string name="install">Install</string>
+    <string name="installed">Installed</string>
+    <string name="retry">Retry</string>
+
+    <!-- General Settings -->
+    <string name="show_costume_tab">Show Costume tab in QR Code</string>
+    <string name="show_costume_tab_desc">Display the Costume option in the QR Code mode selector</string>
+    <string name="show_zoom_slider">Show zoom slider</string>
+    <string name="show_zoom_slider_desc">Display the zoom slider capsule on the scanner screen</string>
 </resources>

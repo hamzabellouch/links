@@ -18,10 +18,16 @@
     <string name="credits_desc">الحقوق والبرمجيات الحرة</string>
     <string name="display">العرض</string>
     <string name="display_settings">المظهر الداكن، الألوان الديناميكية، اللغات</string>
-    <string name="dark_theme">المظهر الداكن</string>
+    <string name="dark_theme">الوضع الداكن</string>
     <string name="follow_system">النظام</string>
+    <string name="follow_system_desc">اتباع إعدادات المظهر الداكن للنظام</string>
     <string name="on">مفعل</string>
-    <string name="off">معطل</string>
+    <string name="dark_theme_on_desc">استخدام المظهر الداكن دائماً</string>
+    <string name="off">متوقف</string>
+    <string name="dark_theme_off_desc">عدم استخدام المظهر الداكن أبداً</string>
+    <string name="additional_settings">إعدادات إضافية</string>
+    <string name="high_contrast">ثيم داكن عالي التباين</string>
+    <string name="high_contrast_desc">استخدام خلفية سوداء نقية في الوضع الداكن</string>
     <string name="cancel">إلغاء</string>
     <string name="close">إغلاق</string>
     <string name="unknown_error">خطأ غير معروف</string>
@@ -128,6 +134,7 @@
     <string name="downloaded_successfully">تم التنزيل بنجاح</string>
     <string name="installer_auto_open">يجب أن يفتح برنامج التثبيت تلقائياً.</string>
     <string name="stable">مستقر</string>
+    <string name="official_release">الإصدار الرسمي</string>
     <string name="currently_unavailable">غير متاح حالياً</string>
     <string name="beta">بيتا</string>
     <string name="early_access">الحصول على الميزات الجديدة</string>
@@ -221,4 +228,39 @@
     <string name="deselect_all">إلغاء تحديد الكل</string>
     <string name="delete_selected">حذف المحدد</string>
     <string name="items_deleted_successfully">تم حذف %d عنصر بنجاح</string>
+
+    <!-- Onboarding / Welcome Flow -->
+    <string name="links_brand" translatable="false">Links</string>
+    <string name="welcome_to_links">مرحبًا بك في\nLinks</string>
+    <string name="welcome_desc">استمتع بأدوات متطورة لفحص أمان الروابط، كشف التهديدات، ومسح وتوليد رموز QR بكل خصوصية وأمان عبر أجهزتك.</string>
+    <string name="get_started">البدء</string>
+    <string name="onboarding_features_title">افحص وتحقق\nفي ثوانٍ</string>
+    <string name="onboarding_features_desc">تتبع سلاسل إعادة التوجيه للروابط المختصرة، واكشف محاولات الاحتيال، وامسح رموز QR محلياً على جهازك.</string>
+    <string name="skip">تخطي</string>
+    <string name="continue_button">متابعة</string>
+    <string name="onboarding_level_up_title">ارتقِ بتجربتك\nالرقمية</string>
+    <string name="onboarding_level_up_desc">احصل على حماية ذكية وميزات مخصصة وأدوات متقدمة بدون أي تعقب أو إعلانات مباشرة على جهازك.</string>
+    <string name="not_now">ليس الآن</string>
+    <string name="lets_go">لننطلق!</string>
+
+    <!-- Language Packs -->
+    <string name="download_languages">تحميل اللغات</string>
+    <string name="download_languages_desc">تحميل وتثبيت ترجمات المجتمع</string>
+    <string name="downloaded_languages">اللغات المحملة</string>
+    <string name="built_in_languages">اللغات</string>
+    <string name="languages">اللغات</string>
+    <string name="no_downloaded_languages">لا توجد لغات محملة بعد</string>
+    <string name="download_failed">فشل تحميل ملف اللغة</string>
+    <string name="language_downloaded">تم تحميل وتثبيت اللغة بنجاح</string>
+    <string name="language_deleted">تم حذف اللغة</string>
+    <string name="available_community_languages">لغات المجتمع المتاحة</string>
+    <string name="install">تثبيت</string>
+    <string name="installed">مثبت</string>
+    <string name="retry">إعادة المحاولة</string>
+
+    <!-- General Settings -->
+    <string name="show_costume_tab">إظهار خيار مخصص في رمز QR</string>
+    <string name="show_costume_tab_desc">عرض خيار مخصص (Costume) في شريط أوضاع رمز QR</string>
+    <string name="show_zoom_slider">إظهار شريط التكبير</string>
+    <string name="show_zoom_slider_desc">عرض كبسولة وشريط التحكم بالتكبير في شاشة المسح</string>
 </resources>

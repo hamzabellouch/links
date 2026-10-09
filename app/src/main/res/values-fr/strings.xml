@@ -18,8 +18,14 @@
     <string name="display_settings">Thème sombre, couleur dynamique, langues</string>
     <string name="dark_theme">Thème sombre</string>
     <string name="follow_system">Système</string>
+    <string name="follow_system_desc">Suivre les paramètres du thème sombre du système</string>
     <string name="on">Activé</string>
+    <string name="dark_theme_on_desc">Toujours utiliser le thème sombre</string>
     <string name="off">Désactivé</string>
+    <string name="dark_theme_off_desc">Ne jamais utiliser le thème sombre</string>
+    <string name="additional_settings">Paramètres supplémentaires</string>
+    <string name="high_contrast">Thème sombre à contraste élevé</string>
+    <string name="high_contrast_desc">Utiliser un arrière-plan noir pur en mode sombre</string>
     <string name="cancel">Annuler</string>
     <string name="close">Fermer</string>
     <string name="unknown_error">Erreur inconnue</string>
@@ -109,10 +115,32 @@
     <string name="downloaded_successfully">Téléchargé avec succès</string>
     <string name="installer_auto_open">L\'installeur devrait s\'ouvrir automatiquement.</string>
     <string name="stable">Stable</string>
+    <string name="official_release">Version officielle</string>
     <string name="currently_unavailable">Actuellement indisponible</string>
     <string name="beta">Beta</string>
     <string name="early_access">Accès anticipé</string>
     <string name="pre_release_desc">Installez des versions de pré-déploiement pour prévisualiser les nouvelles fonctionnalités et modifications.\n\nIl y aura une certaine instabilité dans ces versions, n\'hésitez donc pas à nous faire part de vos commentaires si vous rencontrez des problèmes pour nous aider à améliorer l\'application.</string>
     <string name="update_directory">Répertoire de mise à jour</string>
+
+    <!-- Language Packs -->
+    <string name="download_languages">Télécharger des langues</string>
+    <string name="download_languages_desc">Télécharger les traductions de la communauté</string>
+    <string name="downloaded_languages">Langues téléchargées</string>
+    <string name="built_in_languages">Langues</string>
+    <string name="languages">Langues</string>
+    <string name="no_downloaded_languages">Aucune langue téléchargée pour le moment</string>
+    <string name="download_failed">Échec du téléchargement de la langue</string>
+    <string name="language_downloaded">Langue téléchargée avec succès</string>
+    <string name="language_deleted">Langue supprimée</string>
+    <string name="available_community_languages">Langues communautaires disponibles</string>
+    <string name="install">Installer</string>
+    <string name="installed">Installée</string>
+    <string name="retry">Réessayer</string>
+
+    <!-- General Settings -->
+    <string name="show_costume_tab">Afficher l\'option Personnaliser dans le code QR</string>
+    <string name="show_costume_tab_desc">Afficher l\'option Personnaliser dans la barre de modes du code QR</string>
+    <string name="show_zoom_slider">Afficher la barre de zoom</string>
+    <string name="show_zoom_slider_desc">Afficher la capsule et la barre de zoom sur l\'écran du scanner</string>
 </resources>
 

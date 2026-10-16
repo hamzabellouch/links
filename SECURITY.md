@@ -6,8 +6,8 @@ The following versions of Links are currently supported with security, privacy, 
 
 | Version       | Supported          |
 | ------------- | ------------------ |
-| + 0.0.5       | :white_check_mark: |
-| < 0.0.5       | :x:                |
+| + 0.0.6-beta  | :white_check_mark: |
+| < 0.0.6-beta  | :x:                |
 
 
 

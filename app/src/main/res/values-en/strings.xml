@@ -30,7 +30,7 @@
     <string name="close">Close</string>
     <string name="unknown_error">Unknown error</string>
     <string name="translate">Translate</string>
-    <string name="translate_desc">Help translate this app on Hosted Weblate</string>
+    <string name="translate_desc">Help translate this app on GitHub repository</string>
     <string name="github_issue">GitHub issue</string>
     <string name="github_issue_desc">Submit an issue for bug report or feature request</string>
     <string name="info_copied">Info copied to clipboard</string>
@@ -173,4 +173,21 @@
     <string name="show_costume_tab_desc">Display the Costume option in the QR Code mode selector</string>
     <string name="show_zoom_slider">Show zoom slider</string>
     <string name="show_zoom_slider_desc">Display the zoom slider capsule on the scanner screen</string>
+
+    <!-- QR Code Styling and Formats -->
+    <string name="export_format">Export Format</string>
+    <string name="select_export_format">Select export format</string>
+    <string name="style_and_colors">Style &amp; Colors</string>
+    <string name="colors">Colors</string>
+    <string name="dots">Dots</string>
+    <string name="marker_border">Marker border</string>
+    <string name="marker_center">Marker center</string>
+    <string name="format_png_desc">High quality lossless image</string>
+    <string name="format_jpg_desc">Standard image format</string>
+    <string name="format_webp_desc">Modern lightweight image</string>
+    <string name="format_pdf_desc">Printable document format</string>
+    <string name="saved_qr_success">Saved QR code (%1$s) to %2$s</string>
+    <string name="recommended">Recommended</string>
+    <string name="save_qr">Save QR</string>
+    <string name="style">Style</string>
 </resources>

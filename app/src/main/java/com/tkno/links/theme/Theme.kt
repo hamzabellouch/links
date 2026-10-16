@@ -62,10 +62,19 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
+fun isAppInArabic(): Boolean {
+    val context = LocalContext.current
+    val locale = androidx.core.os.ConfigurationCompat.getLocales(context.resources.configuration)[0]
+        ?: java.util.Locale.getDefault()
+    return locale.language.equals("ar", ignoreCase = true) || locale.language.startsWith("ar")
+}
+
+@Composable
 fun LinksTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     isHighContrast: Boolean = false,
     dynamicColor: Boolean = true,
+    isArabic: Boolean = isAppInArabic(),
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
@@ -119,5 +128,7 @@ fun LinksTheme(
         else -> LightColorScheme
     }
 
-    MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
+    val typography = if (isArabic) ArabicTypography else Typography
+
+    MaterialTheme(colorScheme = colorScheme, typography = typography, content = content)
 }

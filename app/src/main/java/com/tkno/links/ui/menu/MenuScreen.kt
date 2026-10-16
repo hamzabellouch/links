@@ -76,7 +76,10 @@ import com.tkno.links.ui.page.AppUpdater
 import com.tkno.links.ui.page.WhatsNewDialog
 import com.tkno.links.ui.page.settings.BasePreferencePage
 import com.tkno.links.ui.page.settings.about.UpdatePage
+import com.tkno.links.ui.common.LocalDarkTheme
 import com.tkno.links.ui.page.settings.appearance.DarkThemePreferences
+import com.tkno.links.util.DarkThemePreference
+import com.tkno.links.util.PreferenceUtil
 import java.util.Locale
 
 enum class MenuSubScreen {
@@ -289,7 +292,7 @@ fun GeneralSettingsPage(onNavigateBack: () -> Unit) {
     val context = LocalContext.current
     val prefs = remember { context.getSharedPreferences("links_prefs", android.content.Context.MODE_PRIVATE) }
 
-    var showCostumeTab by remember { mutableStateOf(prefs.getBoolean("show_costume_tab", true)) }
+    var showCostumeTab by remember { mutableStateOf(prefs.getBoolean("show_costume_tab", false)) }
     var showZoomSlider by remember {
         mutableStateOf(
             if (prefs.contains("show_zoom_slider")) {
@@ -305,7 +308,7 @@ fun GeneralSettingsPage(onNavigateBack: () -> Unit) {
     DisposableEffect(prefs) {
         val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
             if (key == "show_costume_tab") {
-                showCostumeTab = p.getBoolean("show_costume_tab", true)
+                showCostumeTab = p.getBoolean("show_costume_tab", false)
             } else if (key == "show_zoom_slider") {
                 showZoomSlider = p.getBoolean("show_zoom_slider", false)
             }
@@ -448,14 +451,15 @@ fun AppearancePreferences(onNavigateBack: () -> Unit, onNavigateTo: (String) -> 
     val context = LocalContext.current
     val prefs = remember { context.getSharedPreferences("links_prefs", android.content.Context.MODE_PRIVATE) }
 
-    var darkThemePref by remember { mutableIntStateOf(prefs.getInt("dark_theme", 0)) }
+    val darkThemePreference = LocalDarkTheme.current
+    val isDark = darkThemePreference.isDarkTheme()
+    val darkThemeDesc = darkThemePreference.getDarkThemeDesc()
+
     var isDynamicColor by remember { mutableStateOf(prefs.getBoolean("dynamic_color", true)) }
 
     DisposableEffect(prefs) {
         val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
-            if (key == "dark_theme") {
-                darkThemePref = p.getInt("dark_theme", 0)
-            } else if (key == "dynamic_color") {
+            if (key == "dynamic_color") {
                 isDynamicColor = p.getBoolean("dynamic_color", true)
             }
         }
@@ -463,18 +467,6 @@ fun AppearancePreferences(onNavigateBack: () -> Unit, onNavigateTo: (String) -> 
         onDispose {
             prefs.unregisterOnSharedPreferenceChangeListener(listener)
         }
-    }
-
-    val isDark = when (darkThemePref) {
-        1 -> true
-        2 -> false
-        else -> isSystemInDarkTheme()
-    }
-
-    val darkThemeDesc = when (darkThemePref) {
-        1 -> stringResource(id = R.string.on)
-        2 -> stringResource(id = R.string.off)
-        else -> stringResource(id = R.string.follow_system)
     }
 
     BasePreferencePage(
@@ -504,9 +496,8 @@ fun AppearancePreferences(onNavigateBack: () -> Unit, onNavigateTo: (String) -> 
                     isChecked = isDark,
                     description = darkThemeDesc,
                     onChecked = {
-                        val newPref = if (isDark) 2 else 1
-                        darkThemePref = newPref
-                        prefs.edit().putInt("dark_theme", newPref).apply()
+                        val newPref = if (isDark) DarkThemePreference.OFF else DarkThemePreference.ON
+                        PreferenceUtil.modifyDarkThemePreference(newPref)
                     },
                     onClick = { onNavigateTo("dark_theme") },
                 )
@@ -1104,26 +1095,7 @@ fun TroubleShootingPage(onNavigateBack: () -> Unit) {
     var showContactDialog by remember { mutableStateOf(false) }
     var showReportDialog by remember { mutableStateOf(false) }
 
-    val prefs = remember { context.getSharedPreferences("links_prefs", android.content.Context.MODE_PRIVATE) }
-    var darkThemePref by remember { mutableIntStateOf(prefs.getInt("dark_theme", 0)) }
-
-    DisposableEffect(prefs) {
-        val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
-            if (key == "dark_theme") {
-                darkThemePref = p.getInt("dark_theme", 0)
-            }
-        }
-        prefs.registerOnSharedPreferenceChangeListener(listener)
-        onDispose {
-            prefs.unregisterOnSharedPreferenceChangeListener(listener)
-        }
-    }
-
-    val isDark = when (darkThemePref) {
-        1 -> true
-        2 -> false
-        else -> isSystemInDarkTheme()
-    }
+    val isDark = LocalDarkTheme.current.isDarkTheme()
 
     val emailContainer = if (isDark) Color(0xFF1E293B) else Color(0xFFF1F5F9)
     val emailContent = if (isDark) Color(0xFF94A3B8) else Color(0xFF475569)
@@ -1516,9 +1488,9 @@ fun AboutPage(
     AppUpdater(isAutoUpdateEnabled = isAutoUpdateEnabled)
 
     val versionName = try {
-        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "0.0.5"
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "0.0.6-beta"
     } catch (e: Exception) {
-        "0.0.5"
+        "0.0.6-beta"
     }
     val info = "App version: $versionName\nPackage name: ${context.packageName}\nDevice: Android ${android.os.Build.VERSION.RELEASE} (API ${android.os.Build.VERSION.SDK_INT})"
     val uriHandler = LocalUriHandler.current
@@ -1742,6 +1714,7 @@ fun CreditsPage(onNavigateBack: () -> Unit) {
             Triple("Material Icons", "Apache License, Version 2.0", "https://fonts.google.com/icons"),
             Triple("Accompanist", "Apache License, Version 2.0", "https://github.com/google/accompanist"),
             Triple("ZXing", "Apache License, Version 2.0", "https://github.com/zxing/zxing"),
+            Triple("Noto Sans Arabic", "SIL Open Font License, Version 1.1", "https://fonts.google.com/noto/specimen/Noto+Sans+Arabic"),
             Triple("App icon by Icons8", "Universal Multimedia Licensing Agreement for Icons8", "https://icons8.com/"),
         )
     }

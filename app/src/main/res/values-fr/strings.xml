@@ -30,7 +30,7 @@
     <string name="close">Fermer</string>
     <string name="unknown_error">Erreur inconnue</string>
     <string name="translate">Traduire</string>
-    <string name="translate_desc">Aidez à traduire cette application sur Hosted Weblate</string>
+    <string name="translate_desc">Aidez à traduire cette application sur le dépôt GitHub</string>
     <string name="github_issue">Problème GitHub</string>
     <string name="github_issue_desc">Soumettre un problème pour un rapport de bogue ou une demande de fonctionnalité</string>
     <string name="info_copied">Informations copiées dans le presse-papiers</string>
@@ -142,5 +142,22 @@
     <string name="show_costume_tab_desc">Afficher l\'option Personnaliser dans la barre de modes du code QR</string>
     <string name="show_zoom_slider">Afficher la barre de zoom</string>
     <string name="show_zoom_slider_desc">Afficher la capsule et la barre de zoom sur l\'écran du scanner</string>
+
+    <!-- QR Code Styling and Formats -->
+    <string name="export_format">Format d\'export</string>
+    <string name="select_export_format">Sélectionner le format d\'export</string>
+    <string name="style_and_colors">Style et couleurs</string>
+    <string name="colors">Couleurs</string>
+    <string name="dots">Points</string>
+    <string name="marker_border">Bordure du repère</string>
+    <string name="marker_center">Centre du repère</string>
+    <string name="format_png_desc">Image haute qualité sans perte</string>
+    <string name="format_jpg_desc">Format d\'image standard</string>
+    <string name="format_webp_desc">Format d\'image web moderne et léger</string>
+    <string name="format_pdf_desc">Document imprimable</string>
+    <string name="saved_qr_success">Code QR (%1$s) enregistré dans %2$s</string>
+    <string name="recommended">Recommandé</string>
+    <string name="save_qr">Save QR</string>
+    <string name="style">Style</string>
 </resources>
 

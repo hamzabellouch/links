@@ -42,17 +42,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tkno.links.R
+import com.tkno.links.ui.common.LocalDarkTheme
 import kotlinx.coroutines.launch
 
 /**
  * Onboarding Flow with 3 screens matching the user's Photoshop concept,
- * fully branded for Links.
+ * fully branded for Links with adaptive Light & Dark mode support.
  */
 @Composable
 fun OnboardingScreen(
@@ -62,18 +62,19 @@ fun OnboardingScreen(
     val pageCount = 3
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { pageCount })
     val coroutineScope = rememberCoroutineScope()
+    val isDark = LocalDarkTheme.current.isDarkTheme()
 
-    // Dark sleek Google/Links background
-    val darkBg = Color(0xFF111315)
-    val onBgText = Color(0xFFF1F3F4)
-    val subtitleText = Color(0xFFC4C7C5)
-    val buttonPrimary = Color(0xFFA8C7FA)
-    val buttonText = Color(0xFF041E49)
-    val outlinedBorder = Color(0xFF444746)
+    // Adaptive Google/Links styling for Light and Dark modes
+    val surfaceBg = if (isDark) Color(0xFF111315) else MaterialTheme.colorScheme.background
+    val onBgText = if (isDark) Color(0xFFF1F3F4) else MaterialTheme.colorScheme.onBackground
+    val subtitleText = if (isDark) Color(0xFFC4C7C5) else MaterialTheme.colorScheme.onSurfaceVariant
+    val buttonPrimary = if (isDark) Color(0xFFA8C7FA) else MaterialTheme.colorScheme.primary
+    val buttonText = if (isDark) Color(0xFF041E49) else MaterialTheme.colorScheme.onPrimary
+    val outlinedBorder = if (isDark) Color(0xFF444746) else MaterialTheme.colorScheme.outlineVariant
 
     Surface(
         modifier = modifier.fillMaxSize(),
-        color = darkBg
+        color = surfaceBg
     ) {
         Column(
             modifier = Modifier
@@ -143,7 +144,6 @@ fun OnboardingScreen(
                                     text = stringResource(R.string.get_started),
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.SemiBold,
-                                    fontFamily = FontFamily.SansSerif
                                 )
                             }
                         }
@@ -174,7 +174,6 @@ fun OnboardingScreen(
                                         text = stringResource(R.string.skip),
                                         fontSize = 15.sp,
                                         fontWeight = FontWeight.SemiBold,
-                                        fontFamily = FontFamily.SansSerif
                                     )
                                 }
 
@@ -197,7 +196,6 @@ fun OnboardingScreen(
                                         text = stringResource(R.string.continue_button),
                                         fontSize = 15.sp,
                                         fontWeight = FontWeight.SemiBold,
-                                        fontFamily = FontFamily.SansSerif
                                     )
                                 }
                             }
@@ -225,7 +223,6 @@ fun OnboardingScreen(
                                         text = stringResource(R.string.not_now),
                                         fontSize = 15.sp,
                                         fontWeight = FontWeight.SemiBold,
-                                        fontFamily = FontFamily.SansSerif
                                     )
                                 }
 
@@ -244,7 +241,6 @@ fun OnboardingScreen(
                                         text = stringResource(R.string.lets_go),
                                         fontSize = 15.sp,
                                         fontWeight = FontWeight.SemiBold,
-                                        fontFamily = FontFamily.SansSerif
                                     )
                                 }
                             }
@@ -266,7 +262,11 @@ fun OnboardingScreen(
                             animationSpec = spring(stiffness = Spring.StiffnessMedium),
                             label = "dot_width"
                         )
-                        val dotColor = if (isSelected) Color.White else Color(0xFF444746)
+                        val dotColor = if (isSelected) {
+                            if (isDark) Color.White else buttonPrimary
+                        } else {
+                            if (isDark) Color(0xFF444746) else outlinedBorder
+                        }
 
                         Box(
                             modifier = Modifier
@@ -334,7 +334,6 @@ private fun WelcomePage(
                     text = stringResource(R.string.links_brand),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.SemiBold,
-                        fontFamily = FontFamily.SansSerif
                     ),
                     color = onBgText
                 )
@@ -349,7 +348,6 @@ private fun WelcomePage(
                     fontSize = 38.sp,
                     lineHeight = 44.sp,
                     fontWeight = FontWeight.Normal,
-                    fontFamily = FontFamily.SansSerif,
                     letterSpacing = (-0.5).sp
                 ),
                 color = onBgText
@@ -363,7 +361,6 @@ private fun WelcomePage(
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontSize = 16.sp,
                     lineHeight = 24.sp,
-                    fontFamily = FontFamily.SansSerif
                 ),
                 color = subtitleText
             )
@@ -419,7 +416,6 @@ private fun FeaturesPage(
                     text = stringResource(R.string.links_brand),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.SemiBold,
-                        fontFamily = FontFamily.SansSerif
                     ),
                     color = onBgText
                 )
@@ -434,7 +430,6 @@ private fun FeaturesPage(
                     fontSize = 38.sp,
                     lineHeight = 44.sp,
                     fontWeight = FontWeight.Normal,
-                    fontFamily = FontFamily.SansSerif,
                     letterSpacing = (-0.5).sp
                 ),
                 color = onBgText
@@ -448,7 +443,6 @@ private fun FeaturesPage(
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontSize = 16.sp,
                     lineHeight = 24.sp,
-                    fontFamily = FontFamily.SansSerif
                 ),
                 color = subtitleText
             )
@@ -504,7 +498,6 @@ private fun LevelUpPage(
                     text = stringResource(R.string.links_brand),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.SemiBold,
-                        fontFamily = FontFamily.SansSerif
                     ),
                     color = onBgText
                 )
@@ -519,7 +512,6 @@ private fun LevelUpPage(
                     fontSize = 38.sp,
                     lineHeight = 44.sp,
                     fontWeight = FontWeight.Normal,
-                    fontFamily = FontFamily.SansSerif,
                     letterSpacing = (-0.5).sp
                 ),
                 color = onBgText
@@ -533,7 +525,6 @@ private fun LevelUpPage(
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontSize = 16.sp,
                     lineHeight = 24.sp,
-                    fontFamily = FontFamily.SansSerif
                 ),
                 color = subtitleText
             )

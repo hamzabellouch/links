@@ -32,7 +32,7 @@
     <string name="close">إغلاق</string>
     <string name="unknown_error">خطأ غير معروف</string>
     <string name="translate">ترجمة</string>
-    <string name="translate_desc">المساعدة في ترجمة هذا التطبيق على Hosted Weblate</string>
+    <string name="translate_desc">المساعدة في ترجمة هذا التطبيق على مستودع GitHub</string>
     <string name="github_issue">مشكلة في GitHub</string>
     <string name="github_issue_desc">تقديم إبلاغ عن خطأ أو طلب ميزة جديدة</string>
     <string name="info_copied">تم نسخ المعلومات إلى الحافظة</string>
@@ -263,4 +263,21 @@
     <string name="show_costume_tab_desc">عرض خيار مخصص (Costume) في شريط أوضاع رمز QR</string>
     <string name="show_zoom_slider">إظهار شريط التكبير</string>
     <string name="show_zoom_slider_desc">عرض كبسولة وشريط التحكم بالتكبير في شاشة المسح</string>
+
+    <!-- QR Code Styling and Formats -->
+    <string name="export_format">صيغة التصدير</string>
+    <string name="select_export_format">اختر صيغة حفظ رمز QR</string>
+    <string name="style_and_colors">الستايل والألوان</string>
+    <string name="colors">الألوان</string>
+    <string name="dots">النقاط</string>
+    <string name="marker_border">إطار الزوايا</string>
+    <string name="marker_center">مركز الزوايا</string>
+    <string name="format_png_desc">صورة عالية الدقة بدون فقدان للجودة</string>
+    <string name="format_jpg_desc">صيغة الصور القياسية الشائعة</string>
+    <string name="format_webp_desc">صيغة ويب عصرية وخفيفة الحجم</string>
+    <string name="format_pdf_desc">مستند جاهز للطباعة والمشاركة</string>
+    <string name="saved_qr_success">تم حفظ رمز QR (%1$s) في %2$s</string>
+    <string name="recommended">موصى به</string>
+    <string name="save_qr">Save QR</string>
+    <string name="style">الستايل</string>
 </resources>

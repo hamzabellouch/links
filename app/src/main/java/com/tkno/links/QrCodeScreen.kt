@@ -53,16 +53,24 @@ import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateRectAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -80,6 +88,8 @@ import androidx.compose.material.icons.outlined.Image
 import com.tkno.links.ui.icon.QrCodeIcon
 import com.tkno.links.ui.icon.CenterFocusWeak
 import com.tkno.links.ui.icon.PictureAsPdf
+import com.tkno.links.ui.icon.FormatListBulleted
+import com.tkno.links.ui.icon.StyleIcon
 import androidx.compose.material.icons.outlined.Cameraswitch
 import androidx.compose.material.icons.outlined.ZoomIn
 import androidx.compose.material.icons.outlined.ZoomOut
@@ -1628,12 +1638,12 @@ fun QrCodeScreen(
 ) {
     val context = LocalContext.current
     val prefs = remember { context.getSharedPreferences("links_prefs", android.content.Context.MODE_PRIVATE) }
-    var showCostumeTab by remember { mutableStateOf(prefs.getBoolean("show_costume_tab", true)) }
+    var showCostumeTab by remember { mutableStateOf(prefs.getBoolean("show_costume_tab", false)) }
 
     DisposableEffect(prefs) {
         val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
             if (key == "show_costume_tab") {
-                showCostumeTab = p.getBoolean("show_costume_tab", true)
+                showCostumeTab = p.getBoolean("show_costume_tab", false)
             }
         }
         prefs.registerOnSharedPreferenceChangeListener(listener)
@@ -3118,15 +3128,30 @@ fun GenerateContent(
 ) {
     var qrInput by remember { mutableStateOf("") }
     var qrBitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var selectedColor by remember { mutableStateOf(QrColor.BLACK) }
+    var dotsStyle by remember { mutableStateOf(QrDotsStyle.SQUARE) }
+    var markerBorder by remember { mutableStateOf(QrMarkerBorder.SQUARE) }
+    var markerCenter by remember { mutableStateOf(QrMarkerCenter.SQUARE) }
+    var exportFormat by remember { mutableStateOf(QrExportFormat.PNG) }
+    var showFormatDialog by remember { mutableStateOf(false) }
+    var showColorPanel by remember { mutableStateOf(false) }
+    var showStylePanel by remember { mutableStateOf(false) }
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
 
-    LaunchedEffect(qrInput) {
+    LaunchedEffect(qrInput, selectedColor, dotsStyle, markerBorder, markerCenter) {
         val trimmed = qrInput.trim()
         qrBitmap = if (trimmed.isNotEmpty()) {
-            QrGenerator.generate(trimmed, size = 512)
+            QrGenerator.generate(
+                text = trimmed,
+                size = 512,
+                color = selectedColor,
+                dotsStyle = dotsStyle,
+                markerBorder = markerBorder,
+                markerCenter = markerCenter
+            )
         } else {
             null
         }
@@ -3135,7 +3160,8 @@ fun GenerateContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp, vertical = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -3195,7 +3221,7 @@ fun GenerateContent(
                 .padding(vertical = 8.dp),
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Display QR Code Box
         Box(
@@ -3250,28 +3276,610 @@ fun GenerateContent(
             }
         }
 
-        // Save QR Code Button — always visible, disabled when no content
-        Spacer(modifier = Modifier.height(20.dp))
-        Button(
-            onClick = {
-                if (qrBitmap != null) saveBitmapToGallery(context, qrBitmap!!)
-            },
-            enabled = qrBitmap != null,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f),
-                disabledContentColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.35f),
-            ),
-            shape = RoundedCornerShape(50),
-            modifier = Modifier.fillMaxWidth(0.9f)
+        // Color Panel (Appears directly below the QR Code Box)
+        AnimatedVisibility(
+            visible = showColorPanel && qrBitmap != null,
+            enter = expandVertically(animationSpec = spring(stiffness = Spring.StiffnessMediumLow)) + fadeIn(),
+            exit = shrinkVertically(animationSpec = spring(stiffness = Spring.StiffnessMediumLow)) + fadeOut()
         ) {
-            Icon(
-                imageVector = Icons.Outlined.Download,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp).padding(end = 6.dp),
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth(0.95f)
+                    .padding(top = 16.dp),
+                shape = RoundedCornerShape(20.dp),
+                color = MaterialTheme.colorScheme.surfaceContainer,
+                tonalElevation = 4.dp
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    // Header: Title and Close button
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Outlined.Palette,
+                                contentDescription = null,
+                                tint = softBlue,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.colors),
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        IconButton(
+                            onClick = { showColorPanel = false },
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close",
+                                tint = Color.White.copy(alpha = 0.7f),
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                    }
+
+                    // Color Palette Row (Matches Image 1)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        QrColor.entries.forEach { col ->
+                            QrColorSwatch(
+                                color = col,
+                                isSelected = selectedColor == col,
+                                onClick = { selectedColor = col }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        // Style Panel (Appears directly below the QR Code Box)
+        AnimatedVisibility(
+            visible = showStylePanel && qrBitmap != null,
+            enter = expandVertically(animationSpec = spring(stiffness = Spring.StiffnessMediumLow)) + fadeIn(),
+            exit = shrinkVertically(animationSpec = spring(stiffness = Spring.StiffnessMediumLow)) + fadeOut()
+        ) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth(0.95f)
+                    .padding(top = 16.dp),
+                shape = RoundedCornerShape(20.dp),
+                color = MaterialTheme.colorScheme.surfaceContainer,
+                tonalElevation = 4.dp
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // Header: Title and Close button
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = StyleIcon,
+                                contentDescription = null,
+                                tint = softBlue,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.style),
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        IconButton(
+                            onClick = { showStylePanel = false },
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close",
+                                tint = Color.White.copy(alpha = 0.7f),
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                    }
+
+                    // 1. Dots Style Row (Matches Image 2)
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = stringResource(R.string.dots),
+                            color = Color.White.copy(alpha = 0.85f),
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            QrDotsStyle.entries.forEach { style ->
+                                QrStyleTile(
+                                    isSelected = dotsStyle == style,
+                                    onClick = { dotsStyle = style }
+                                ) { tint ->
+                                    DotsPreview(style = style, tint = tint, modifier = Modifier.size(28.dp))
+                                }
+                            }
+                        }
+                    }
+
+                    // 2. Marker Border Row (Matches Image 2)
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = stringResource(R.string.marker_border),
+                            color = Color.White.copy(alpha = 0.85f),
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            QrMarkerBorder.entries.forEach { border ->
+                                QrStyleTile(
+                                    isSelected = markerBorder == border,
+                                    onClick = { markerBorder = border }
+                                ) { tint ->
+                                    MarkerBorderPreview(border = border, tint = tint, modifier = Modifier.size(28.dp))
+                                }
+                            }
+                        }
+                    }
+
+                    // 3. Marker Center Row (Matches Image 2)
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = stringResource(R.string.marker_center),
+                            color = Color.White.copy(alpha = 0.85f),
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            QrMarkerCenter.entries.forEach { center ->
+                                QrStyleTile(
+                                    isSelected = markerCenter == center,
+                                    onClick = { markerCenter = center }
+                                ) { tint ->
+                                    MarkerCenterPreview(center = center, tint = tint, modifier = Modifier.size(28.dp))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Actions Row: [Save QR Capsule on Left] [Color Circle] [Style Circle] [Format Circle on Right]
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // 1. Save QR Button (On the LEFT)
+                Button(
+                    onClick = {
+                        if (qrBitmap != null) {
+                            val highRes = QrGenerator.generate(
+                                text = qrInput.trim(),
+                                size = 1024,
+                                color = selectedColor,
+                                dotsStyle = dotsStyle,
+                                markerBorder = markerBorder,
+                                markerCenter = markerCenter
+                            ) ?: qrBitmap!!
+                            QrGenerator.saveQr(context, highRes, exportFormat)
+                        }
+                    },
+                    enabled = qrBitmap != null,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f),
+                        disabledContentColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.35f),
+                    ),
+                    shape = RoundedCornerShape(50),
+                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Download,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp).padding(end = 6.dp),
+                    )
+                    Text(
+                        text = stringResource(R.string.save_qr),
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        softWrap = false
+                    )
+                }
+
+                // 2. First circle on the right: Color Button
+                FilledIconButton(
+                    onClick = {
+                        if (qrBitmap != null) {
+                            showColorPanel = !showColorPanel
+                            if (showColorPanel) showStylePanel = false
+                        }
+                    },
+                    enabled = qrBitmap != null,
+                    modifier = Modifier.size(40.dp),
+                    shape = CircleShape,
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = if (showColorPanel) softBlue else MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = if (showColorPanel) Color.White else MaterialTheme.colorScheme.onSecondaryContainer,
+                        disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f),
+                        disabledContentColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.35f)
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Palette,
+                        contentDescription = stringResource(R.string.colors),
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+                // 3. Second circle on the right: Style Button
+                FilledIconButton(
+                    onClick = {
+                        if (qrBitmap != null) {
+                            showStylePanel = !showStylePanel
+                            if (showStylePanel) showColorPanel = false
+                        }
+                    },
+                    enabled = qrBitmap != null,
+                    modifier = Modifier.size(40.dp),
+                    shape = CircleShape,
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = if (showStylePanel) softBlue else MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = if (showStylePanel) Color.White else MaterialTheme.colorScheme.onSecondaryContainer,
+                        disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f),
+                        disabledContentColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.35f)
+                    )
+                ) {
+                    Icon(
+                        imageVector = StyleIcon,
+                        contentDescription = stringResource(R.string.style),
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+                // 4. Third circle on the right: Format Selection Button (PNG / JPG / PDF)
+                FilledIconButton(
+                    onClick = {
+                        if (qrBitmap != null) {
+                            showFormatDialog = true
+                        }
+                    },
+                    enabled = qrBitmap != null,
+                    modifier = Modifier.size(40.dp),
+                    shape = CircleShape,
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f),
+                        disabledContentColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.35f)
+                    )
+                ) {
+                    Icon(
+                        imageVector = FormatListBulleted,
+                        contentDescription = stringResource(R.string.export_format),
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+        }
+
+        // Export Format Selection Dialog
+        if (showFormatDialog) {
+            FormatSelectionDialog(
+                currentFormat = exportFormat,
+                onFormatSelected = {
+                    exportFormat = it
+                    showFormatDialog = false
+                },
+                onDismissRequest = { showFormatDialog = false },
+                softBlue = softBlue
             )
-            Text(text = stringResource(R.string.save_qr_code), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+        }
+    }
+}
+
+@Composable
+fun FormatSelectionDialog(
+    currentFormat: QrExportFormat,
+    onFormatSelected: (QrExportFormat) -> Unit,
+    onDismissRequest: () -> Unit,
+    softBlue: Color
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(R.string.done), color = softBlue, fontWeight = FontWeight.Bold)
+            }
+        },
+        title = {
+            Text(
+                text = stringResource(R.string.export_format),
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
+        },
+        text = {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                QrExportFormat.entries.forEach { format ->
+                    val isSelected = format == currentFormat
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onFormatSelected(format) },
+                        shape = RoundedCornerShape(12.dp),
+                        color = if (isSelected) softBlue.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceContainerHigh
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 14.dp, vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = if (format == QrExportFormat.PDF) PictureAsPdf else Icons.Outlined.Image,
+                                contentDescription = null,
+                                tint = if (isSelected) softBlue else Color.White.copy(alpha = 0.8f),
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(14.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = format.label,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 15.sp,
+                                        color = Color.White
+                                    )
+                                    if (format == QrExportFormat.PNG) {
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Surface(
+                                            shape = RoundedCornerShape(4.dp),
+                                            color = softBlue.copy(alpha = 0.25f)
+                                        ) {
+                                            Text(
+                                                text = stringResource(R.string.recommended),
+                                                fontSize = 10.sp,
+                                                fontWeight = FontWeight.SemiBold,
+                                                color = softBlue,
+                                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                                Text(
+                                    text = when (format) {
+                                        QrExportFormat.PNG -> stringResource(R.string.format_png_desc)
+                                        QrExportFormat.JPG -> stringResource(R.string.format_jpg_desc)
+                                        QrExportFormat.WEBP -> stringResource(R.string.format_webp_desc)
+                                        QrExportFormat.PDF -> stringResource(R.string.format_pdf_desc)
+                                    },
+                                    fontSize = 12.sp,
+                                    color = Color.White.copy(alpha = 0.65f)
+                                )
+                            }
+                            RadioButton(
+                                selected = isSelected,
+                                onClick = { onFormatSelected(format) },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = softBlue,
+                                    unselectedColor = Color.White.copy(alpha = 0.4f)
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        shape = RoundedCornerShape(20.dp)
+    )
+}
+
+@Composable
+fun QrColorSwatch(
+    color: QrColor,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    val swatchColor = Color(color.colorInt)
+    Box(
+        modifier = Modifier
+            .size(46.dp)
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        if (isSelected) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .border(2.dp, Color.White, RoundedCornerShape(12.dp))
+            )
+        }
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .background(swatchColor, RoundedCornerShape(8.dp))
+        )
+    }
+}
+
+@Composable
+fun QrStyleTile(
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable (tint: Color) -> Unit
+) {
+    val containerColor = if (isSelected) Color(0xFF262626) else Color(0xFFE8E8E8)
+    val contentTint = if (isSelected) Color.White else Color(0xFF262626)
+
+    Box(
+        modifier = modifier
+            .size(52.dp)
+            .background(containerColor, shape = RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick)
+            .padding(10.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        content(contentTint)
+    }
+}
+
+@Composable
+fun DotsPreview(style: QrDotsStyle, tint: Color, modifier: Modifier = Modifier) {
+    Canvas(modifier = modifier) {
+        val w = size.width
+        val h = size.height
+        when (style) {
+            QrDotsStyle.SQUARE -> {
+                val stepX = w / 4f
+                val stepY = h / 4f
+                val boxSize = stepX * 0.85f
+                for (r in 0..2) {
+                    for (c in 0..2) {
+                        if ((r + c) % 2 == 0 || (r == 1 && c == 2)) {
+                            drawRect(
+                                color = tint,
+                                topLeft = androidx.compose.ui.geometry.Offset(c * stepX + stepX * 0.5f, r * stepY + stepY * 0.5f),
+                                size = androidx.compose.ui.geometry.Size(boxSize, boxSize)
+                            )
+                        }
+                    }
+                }
+            }
+            QrDotsStyle.ROUNDED -> {
+                val stepX = w / 4f
+                val stepY = h / 4f
+                val boxSize = stepX * 0.85f
+                val corner = boxSize * 0.35f
+                for (r in 0..2) {
+                    for (c in 0..2) {
+                        if ((r + c) % 2 == 0 || (r == 1 && c == 2)) {
+                            drawRoundRect(
+                                color = tint,
+                                topLeft = androidx.compose.ui.geometry.Offset(c * stepX + stepX * 0.5f, r * stepY + stepY * 0.5f),
+                                size = androidx.compose.ui.geometry.Size(boxSize, boxSize),
+                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(corner, corner)
+                            )
+                        }
+                    }
+                }
+            }
+            QrDotsStyle.DOTS -> {
+                val stepX = w / 4f
+                val stepY = h / 4f
+                val radius = stepX * 0.42f
+                for (r in 0..2) {
+                    for (c in 0..2) {
+                        if ((r + c) % 2 == 0 || (r == 1 && c == 2)) {
+                            drawCircle(
+                                color = tint,
+                                radius = radius,
+                                center = androidx.compose.ui.geometry.Offset((c + 0.9f) * stepX, (r + 0.9f) * stepY)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MarkerBorderPreview(border: QrMarkerBorder, tint: Color, modifier: Modifier = Modifier) {
+    Canvas(modifier = modifier) {
+        val stroke = size.width * 0.16f
+        val pad = stroke / 2f
+        when (border) {
+            QrMarkerBorder.SQUARE -> {
+                drawRect(
+                    color = tint,
+                    topLeft = androidx.compose.ui.geometry.Offset(pad, pad),
+                    size = androidx.compose.ui.geometry.Size(size.width - stroke, size.height - stroke),
+                    style = Stroke(width = stroke)
+                )
+            }
+            QrMarkerBorder.ROUNDED -> {
+                val corner = size.width * 0.28f
+                drawRoundRect(
+                    color = tint,
+                    topLeft = androidx.compose.ui.geometry.Offset(pad, pad),
+                    size = androidx.compose.ui.geometry.Size(size.width - stroke, size.height - stroke),
+                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(corner, corner),
+                    style = Stroke(width = stroke)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun MarkerCenterPreview(center: QrMarkerCenter, tint: Color, modifier: Modifier = Modifier) {
+    Canvas(modifier = modifier) {
+        val stroke = size.width * 0.14f
+        val pad = stroke / 2f
+        drawRoundRect(
+            color = tint.copy(alpha = 0.55f),
+            topLeft = androidx.compose.ui.geometry.Offset(pad, pad),
+            size = androidx.compose.ui.geometry.Size(size.width - stroke, size.height - stroke),
+            cornerRadius = androidx.compose.ui.geometry.CornerRadius(size.width * 0.2f, size.width * 0.2f),
+            style = Stroke(width = stroke)
+        )
+        when (center) {
+            QrMarkerCenter.SQUARE -> {
+                val centerSize = size.width * 0.38f
+                val centerOffset = (size.width - centerSize) / 2f
+                drawRect(
+                    color = tint,
+                    topLeft = androidx.compose.ui.geometry.Offset(centerOffset, centerOffset),
+                    size = androidx.compose.ui.geometry.Size(centerSize, centerSize)
+                )
+            }
+            QrMarkerCenter.CIRCLE -> {
+                val radius = size.width * 0.20f
+                drawCircle(
+                    color = tint,
+                    radius = radius,
+                    center = androidx.compose.ui.geometry.Offset(size.width / 2f, size.height / 2f)
+                )
+            }
         }
     }
 }

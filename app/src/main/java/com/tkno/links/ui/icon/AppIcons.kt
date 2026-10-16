@@ -885,4 +885,169 @@ private var _arrowDownward: ImageVector? = null
 public val arrow_downward: ImageVector
     get() = ArrowDownward
 
+public val FormatListBulleted: ImageVector
+    get() {
+        if (_formatListBulleted != null) {
+            return _formatListBulleted!!
+        }
+        _formatListBulleted = ImageVector.Builder(
+            name = "format_list_bulleted",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f,
+        ).apply {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1f,
+                stroke = null,
+                strokeAlpha = 1f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Bevel,
+                strokeLineMiter = 1f,
+                pathFillType = PathFillType.NonZero,
+            ) {
+                moveTo(9f, 19f)
+                verticalLineTo(17f)
+                horizontalLineTo(21f)
+                verticalLineToRelative(2f)
+                horizontalLineTo(9f)
+                close()
+                moveTo(9f, 13f)
+                verticalLineTo(11f)
+                horizontalLineTo(21f)
+                verticalLineToRelative(2f)
+                horizontalLineTo(9f)
+                close()
+                moveTo(9f, 7f)
+                verticalLineTo(5f)
+                horizontalLineTo(21f)
+                verticalLineTo(7f)
+                horizontalLineTo(9f)
+                close()
+                moveTo(5f, 20f)
+                quadTo(4.18f, 20f, 3.59f, 19.41f)
+                reflectiveQuadTo(3f, 18f)
+                reflectiveQuadTo(3.59f, 16.59f)
+                reflectiveQuadTo(5f, 16f)
+                reflectiveQuadToRelative(1.41f, 0.59f)
+                quadTo(7f, 17.18f, 7f, 18f)
+                reflectiveQuadTo(6.41f, 19.41f)
+                reflectiveQuadTo(5f, 20f)
+                close()
+                moveTo(5f, 14f)
+                quadTo(4.18f, 14f, 3.59f, 13.41f)
+                reflectiveQuadTo(3f, 12f)
+                reflectiveQuadTo(3.59f, 10.59f)
+                reflectiveQuadTo(5f, 10f)
+                reflectiveQuadToRelative(1.41f, 0.59f)
+                quadTo(7f, 11.18f, 7f, 12f)
+                reflectiveQuadTo(6.41f, 13.41f)
+                reflectiveQuadTo(5f, 14f)
+                close()
+                moveTo(3.59f, 7.41f)
+                quadTo(3f, 6.82f, 3f, 6f)
+                reflectiveQuadTo(3.59f, 4.59f)
+                reflectiveQuadTo(5f, 4f)
+                reflectiveQuadTo(6.41f, 4.59f)
+                quadTo(7f, 5.18f, 7f, 6f)
+                reflectiveQuadTo(6.41f, 7.41f)
+                reflectiveQuadTo(5f, 8f)
+                reflectiveQuadTo(3.59f, 7.41f)
+                close()
+            }
+        }.build()
+        return _formatListBulleted!!
+    }
+
+private var _formatListBulleted: ImageVector? = null
+
+public val format_list_bulleted: ImageVector
+    get() = FormatListBulleted
+
+public val StyleIcon: ImageVector
+    get() {
+        if (_styleIcon != null) {
+            return _styleIcon!!
+        }
+        _styleIcon = ImageVector.Builder(
+            name = "style",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f,
+        ).apply {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1f,
+                stroke = null,
+                strokeAlpha = 1f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Bevel,
+                strokeLineMiter = 1f,
+                pathFillType = PathFillType.NonZero,
+            ) {
+                moveTo(3.98f, 19.8f)
+                lineTo(3.13f, 19.45f)
+                quadTo(2.35f, 19.13f, 2.09f, 18.33f)
+                quadTo(1.83f, 17.52f, 2.18f, 16.75f)
+                lineToRelative(1.8f, -3.9f)
+                verticalLineTo(19.8f)
+                close()
+                moveToRelative(4f, 2.2f)
+                quadTo(7.15f, 22f, 6.56f, 21.41f)
+                reflectiveQuadTo(5.98f, 20f)
+                verticalLineTo(14f)
+                lineToRelative(2.65f, 7.35f)
+                quadToRelative(0.08f, 0.17f, 0.15f, 0.34f)
+                reflectiveQuadTo(8.98f, 22f)
+                horizontalLineToRelative(-1f)
+                close()
+                moveToRelative(5.15f, -0.1f)
+                quadToRelative(-0.8f, 0.3f, -1.55f, -0.07f)
+                reflectiveQuadTo(10.53f, 20.65f)
+                lineTo(6.08f, 8.45f)
+                quadTo(5.78f, 7.65f, 6.13f, 6.89f)
+                reflectiveQuadTo(7.28f, 5.85f)
+                lineTo(14.83f, 3.1f)
+                quadToRelative(0.8f, -0.3f, 1.55f, 0.07f)
+                reflectiveQuadToRelative(1.05f, 1.18f)
+                lineToRelative(4.45f, 12.2f)
+                quadToRelative(0.3f, 0.8f, -0.05f, 1.56f)
+                reflectiveQuadToRelative(-1.15f, 1.04f)
+                lineTo(13.13f, 21.9f)
+                close()
+                moveTo(11.69f, 9.71f)
+                quadTo(11.98f, 9.42f, 11.98f, 9f)
+                quadToRelative(0f, -0.43f, -0.29f, -0.71f)
+                reflectiveQuadTo(10.98f, 8f)
+                reflectiveQuadTo(10.26f, 8.29f)
+                reflectiveQuadTo(9.98f, 9f)
+                quadToRelative(0f, 0.42f, 0.29f, 0.71f)
+                reflectiveQuadTo(10.98f, 10f)
+                reflectiveQuadTo(11.69f, 9.71f)
+                close()
+                moveTo(12.43f, 20f)
+                lineToRelative(7.55f, -2.75f)
+                lineTo(15.53f, 5f)
+                lineTo(7.98f, 7.75f)
+                lineTo(12.43f, 20f)
+                close()
+                moveTo(7.98f, 7.75f)
+                lineTo(15.53f, 5f)
+                lineTo(7.98f, 7.75f)
+                close()
+            }
+        }.build()
+        return _styleIcon!!
+    }
+
+private var _styleIcon: ImageVector? = null
+
+public val style_icon: ImageVector
+    get() = StyleIcon
+
+
 

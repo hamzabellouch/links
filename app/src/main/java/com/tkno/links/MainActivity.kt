@@ -135,6 +135,12 @@ class MainActivity : ComponentActivity() {
         }
       }
 
+      val isArabic = remember(currentLocale, appLanguagePref) {
+        appLanguagePref.equals("ar", ignoreCase = true) ||
+        currentLocale.language.equals("ar", ignoreCase = true) ||
+        currentLocale.language.startsWith("ar")
+      }
+
       val layoutDirection = if (isRtl) LayoutDirection.Rtl else LayoutDirection.Ltr
 
       androidx.compose.runtime.LaunchedEffect(isDark) {
@@ -160,7 +166,8 @@ class MainActivity : ComponentActivity() {
         LinksTheme(
           darkTheme = isDark,
           isHighContrast = isHighContrastPref,
-          dynamicColor = dynamicColorPref
+          dynamicColor = dynamicColorPref,
+          isArabic = isArabic
         ) {
           Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
             if (showOnboarding) {
